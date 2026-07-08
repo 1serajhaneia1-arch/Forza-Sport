@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Cart – Forza Sport E‑Store</title>
+  
+  <link rel="icon" type="image/x-icon" href="./Images/favicon.jpeg">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(232,0,13,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(232,0,13,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .cart-wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+    }
+    .cart-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 2rem;
+      align-items: start;
+    }
+    /* Cart items */
+    .cart-items-panel {width: 100%;}
+    .cart-empty {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--muted);
+    }
+    .cart-empty h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem;
+      letter-spacing: 0.06em;
+      margin-bottom: 1rem;
+    }
+    .cart-item {
+      display: grid;
+      grid-template-columns: 90px 1fr auto;
+      gap: 1rem;
+      align-items: center;
+      background: var(--dark3);
+      border: 1px solid #252525;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      transition: border-color 0.2s;
+    }
+    .cart-item:hover { border-color: #3a3a3a; }
+    .cart-item-img {
+      width: 90px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 6px;
+      background: var(--dark4);
+    }
+    .cart-item-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }   
+    .cart-item-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+    .cart-item-cat {
+      font-size: 0.75rem;
+      color: var(--red);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.6rem;
+    }
+    .qty-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .qty-btn {
+      width: 28px;
+      height: 28px;
+      background: var(--dark4);
+      border: 1px solid #3a3a3a;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .qty-btn:hover { background: var(--red); border-color: var(--red); }
+    .qty-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      min-width: 24px;
+      text-align: center;
+    }
+    .cart-item-right { text-align: right; }
+    .cart-item-total {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+    }
+    .remove-btn {
+      background: none;
+      border: none;
+      color: #555;
+      cursor: pointer;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      transition: color 0.2s;
+    }
+    .remove-btn:hover { color: var(--red); }
+    /* Summary panel */
+    .summary-panel {
+      background: var(--dark3);
+      border: 1px solid #252525;
+      border-radius: 8px;
+      padding: 1.8rem;
+      position: sticky;
+      top: 90px;
+    }
+    .summary-panel h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid #2a2a2a;
+      padding-bottom: 0.8rem;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 0.7rem;
+    }
+    .summary-row.total {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #fff;
+      border-top: 1px solid #2a2a2a;
+      padding-top: 0.8rem;
+      margin-top: 0.5rem;
+    }
+    .checkout-btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 1rem;
+      background: var(--red);
+      color: #fff;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      text-decoration: none;
+      border-radius: 4px;
+      margin-top: 1.2rem;
+      transition: background 0.2s, transform 0.15s;
+      border: none;
+      cursor: pointer;
+    }
+    .checkout-btn:hover { background: var(--red2); transform: translateY(-2px); }
+    .continue-btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 0.75rem;
+      background: transparent;
+      color: var(--muted);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      border: 1px solid #333;
+      border-radius: 4px;
+      margin-top: 0.6rem;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .continue-btn:hover { border-color: #555; color: #fff; }
+    .clear-all-btn {
+      background: none;
+      border: none;
+      color: #555;
+      font-size: 0.82rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 1rem;
+      width: 100%;
+      transition: color 0.2s;
+    }
+    .clear-all-btn:hover { color: var(--red); }
+ 
+    .free-shipping-note {
+      font-size: 0.8rem;
+      color: #28a745;
+      margin-top: 0.8rem;
+      text-align: center;
+    }
+ 
+    @media (max-width: 700px) {
+      .cart-grid { grid-template-columns: 1fr; }
+      .cart-item { grid-template-columns: 70px 1fr; }
+      .cart-item-right { grid-column: 2; display: flex; align-items: center; justify-content: space-between; }
+    }
+  </style>
+
+<style id="forza-nav-css">
+/* ── Divider between nav links and auth buttons ── */
+.nav-divider-li {
+  width: 1px;
+  height: 18px;
+  background: rgba(255,255,255,0.15);
+  margin: 0 0.6rem;
+  list-style: none;
+}
+.nav-li-auth {
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+/* SIGN IN */
+.nav-btn-signin {
+  position: relative;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #bbb;
+  text-decoration: none;
+  padding: 0.44rem 0.9rem;
+  border-radius: 3px;
+  overflow: hidden;
+  transition: color 0.25s;
+  white-space: nowrap;
+}
+.nav-btn-signin::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.06);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+  border-radius: 3px;
+}
+.nav-btn-signin::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 100%; height: 2px;
+  background: linear-gradient(90deg, #e8000d, #ff6b6b);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.nav-btn-signin:hover { color: #fff; }
+.nav-btn-signin:hover::before { transform: scaleX(1); }
+.nav-btn-signin:hover::after  { transform: scaleX(1); }
+/* REGISTER */
+.nav-btn-register {
+  position: relative;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #fff;
+  text-decoration: none;
+  padding: 0.44rem 1.1rem;
+  background: linear-gradient(135deg, #e8000d 0%, #c0000b 100%);
+  border-radius: 3px;
+  box-shadow: 0 0 12px rgba(232,0,13,0.35), inset 0 1px 0 rgba(255,255,255,0.12);
+  overflow: hidden;
+  transition: box-shadow 0.25s, transform 0.2s;
+  white-space: nowrap;
+}
+.nav-btn-register::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.22), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.5s ease;
+}
+.nav-btn-register:hover {
+  box-shadow: 0 0 22px rgba(232,0,13,0.65), 0 4px 16px rgba(232,0,13,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+  transform: translateY(-2px);
+}
+.nav-btn-register:hover::before { left: 160%; }
+/* USER DROPDOWN */
+.nav-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  padding: 0.44rem 0.9rem;
+  border: 2px solid rgba(255,255,255,0.18);
+  border-radius: 3px;
+  transition: border-color 0.2s;
+  user-select: none;
+  white-space: nowrap;
+}
+.nav-user-info:hover { border-color: var(--red); }
+.nav-chevron { font-size: 0.65rem; transition: transform 0.25s; }
+.nav-user-info.open .nav-chevron { transform: rotate(180deg); }
+.nav-user-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 200px;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-top: 3px solid var(--red);
+  border-radius: 6px;
+  padding: 0.5rem 0;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  z-index: 600;
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+.nav-user-dropdown.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.nud-item {
+  display: flex; align-items: center; gap: 0.6rem;
+  width: 100%; padding: 0.65rem 1.1rem;
+  color: #ccc; text-decoration: none;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.9rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  background: none; border: none; cursor: pointer; text-align: left;
+  transition: background 0.15s, color 0.15s;
+}
+.nud-item:hover { background: rgba(232,0,13,0.12); color: #fff; }
+.nud-signout { color: #e8000d; }
+.nud-signout:hover { background: rgba(232,0,13,0.15); color: #ff3333; }
+.nud-divider { height: 1px; background: #222; margin: 0.3rem 0; }
+</style>
+</head>
+<body>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="home.html" class="nav-logo">
+    <img src="./Images/logo.jpeg" alt="Forza Sport Logo">
+    <span>Forza Sport</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="home.html">Home</a></li>
+    <li><a href="product.html">Products</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li class="nav-divider-li"></li>
+    <li id="nav-li-guest" class="nav-li-auth">
+      <a href="login.html" class="nav-btn-signin">Sign In</a>
+    </li>
+    <li id="nav-li-register" class="nav-li-auth">
+      <a href="register.html" class="nav-btn-register">Register</a>
+    </li>
+    <li id="nav-li-user" class="nav-li-auth" style="display:none; position:relative;">
+      <div class="nav-user-info" id="nav-user-trigger">
+        <span class="nav-avatar">👤</span>
+        <span id="nav-username">User</span>
+        <span class="nav-chevron">▾</span>
+      </div>
+      <div class="nav-user-dropdown" id="nav-user-dropdown">
+        <a href="account.html" class="nud-item">👤 My Profile</a>
+        <a href="history.html" class="nud-item">📋 Order History</a>
+        <a href="cart.html"    class="nud-item">🛒 My Cart</a>
+        <div class="nud-divider"></div>
+        <button class="nud-item nud-signout" onclick="signOut()">🚪 Sign Out</button>
+      </div>
+    </li>
+  </ul>
+  <a href="cart.html" class="nav-cart-btn">
+    🛒 Cart <span class="cart-badge">0</span>
+  </a>
+</nav>
+ 
+<div class="cart-wrapper">
+  <section class="page-header" style="text-align:left;padding:0 0 2rem;">
+    <h1>Your Cart</h1>
+    <p id="cart-subtitle">Loading your items...</p>
+  </section>
+ 
+  <div class="cart-grid">
+    <div class="cart-items-panel" id="cart-items-panel"></div>
+ 
+    <aside class="summary-panel" id="summary-panel">
+      <h2>Order Summary</h2>
+      <div class="summary-row"><span>Subtotal</span><span id="s-sub">LYD 0</span></div>
+      <div class="summary-row"><span>Shipping</span><span id="s-ship">LYD 80</span></div>
+      <div class="summary-row total"><span>Total</span><span id="s-total">LYD 0</span></div>
+      <p class="free-shipping-note" id="ship-note"></p>
+      <a href="checkout.html" class="checkout-btn">Proceed to Checkout →</a>
+      <a href="product.html" class="continue-btn">← Continue Shopping</a>
+      <button class="clear-all-btn" onclick="clearCart(); renderCart()">Clear Cart</button>
+    </aside>
+  </div>
+</div>
+ 
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-brand">
+    <img src="Images/logo.jpg" alt="Forza Sport">
+    <p>Sport. Style. Energy.</p>
+  </div>
+  <div class="footer-links">
+    <h4>Quick Links</h4>
+    <ul>
+      <li><a href="home.html">Home</a></li>
+      <li><a href="product.html">Products</a></li>
+      <li><a href="checkout.html">Checkout</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </div>
+  <div class="footer-social">
+    <h4>Help</h4>
+    <ul><li><a href="contact.html">Contact Us</a></li></ul>
+  </div>
+</footer>
+<div class="footer-bottom"><p>&copy; 2026 Forza Sport E‑Store. All rights reserved.</p></div>
+ 
+<script src="cart.js"></script>
+<script>
+const PRODUCT_IMGS = {
+  'Pro High-Top Cleats':     'Images/Cyan cleats.jpeg',
+  'Speed Low-Top Cleats':    'Images/blue cleats.jpeg',
+  'Classic White Cleats':    'Images/white cleats.jpeg',
+  'PSG Black Jordan Kit':    'Images/black psg.jpeg',
+  'Brazil Dark Blue Kit':    'Images/Brazil.jpeg',
+  'Real Madrid White Kit':   'Images/real madrid.jpeg',
+  'Football Kick Trainer':   'Images/Ball handler.jpeg',
+  'Training Cones (10 pcs)': 'Images/Cones.jpeg',
+  'Resistance Bands Set':    'Images/Mat.jpeg',
+};
+ 
+function renderCart() {
+  const cart = getCart();
+  const panel = document.getElementById('cart-items-panel');
+  const subtitle = document.getElementById('cart-subtitle');
+ 
+  if (cart.length === 0) {
+    subtitle.textContent = 'Your cart is empty.';
+    panel.innerHTML = `
+      <div class="cart-empty">
+        <h2>🛒 Nothing Here Yet</h2>
+        <p style="margin-bottom:1.5rem">Add some gear and come back!</p>
+        <a href="product.html" class="btn-red">Browse Products</a>
+      </div>`;
+  } else {
+    const count = getCartCount();
+    subtitle.textContent = `${count} item${count !== 1 ? 's' : ''} in your cart`;
+    panel.innerHTML = '';
+    cart.forEach(item => {
+      const baseName = item.name.replace(/ \(.*?\)$/, '').trim();
+      const img = item.img || PRODUCT_IMGS[baseName] || PRODUCT_IMGS[item.name] || 'Images/logo.jpeg';
+      const el = document.createElement('div');
+      el.className = 'cart-item';
+      el.innerHTML = `
+        <img class="cart-item-img" src="${img}" alt="${item.name}" onerror="this.src='Images/logo.jpeg'">
+        <div class="cart-item-info">
+          <div class="cart-item-name">${item.name}</div>
+          <div class="cart-item-cat">${item.category || ''}</div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="changeQty('${item.name}', -1); renderCart()">−</button>
+            <span class="qty-num">${item.qty}</span>
+            <button class="qty-btn" onclick="changeQty('${item.name}', 1); renderCart()">+</button>
+          </div>
+        </div>
+        <div class="cart-item-right">
+          <div class="cart-item-total">LYD ${(item.price * item.qty).toLocaleString()}</div>
+          <button class="remove-btn" onclick="removeFromCart('${item.name}'); renderCart()">✕ Remove</button>
+        </div>
+      `;
+      panel.appendChild(el);
+    });
+  }
+ 
+  // Update summary
+  const sub = getCartTotal();
+  const shipping = sub === 0 ? 0 : sub >= 1500 ? 0 : 80;
+  document.getElementById('s-sub').textContent   = `LYD ${sub.toLocaleString()}`;
+  document.getElementById('s-ship').textContent  = sub === 0 ? 'LYD 0' : shipping === 0 ? 'FREE' : `LYD ${shipping}`;
+  document.getElementById('s-total').textContent = `LYD ${(sub + shipping).toLocaleString()}`;
+  document.getElementById('ship-note').textContent =
+    sub > 0 && sub < 1500 ? `Add LYD ${(1500 - sub).toLocaleString()} more for free shipping!` :
+    sub >= 1500 ? '✓ You qualify for free shipping!' : '';
+ 
+  updateCartBadge();
+}
+ 
+document.addEventListener('DOMContentLoaded', renderCart);
+</script>
+
+
+
+<script>
+(function() {
+  window.updateAuthNav = updateAuthNav;
+  function updateAuthNav() {
+    var guestEl = document.getElementById('nav-li-guest');
+    var regEl   = document.getElementById('nav-li-register');
+    var userEl  = document.getElementById('nav-li-user');
+    var nameEl  = document.getElementById('nav-username');
+    if (!guestEl) return;
+    var user = null;
+    try { user = JSON.parse(localStorage.getItem('forza_user')); } catch(e) {}
+    if (user && user.fname) {
+      guestEl.style.display = 'none';
+      if (regEl) regEl.style.display = 'none';
+      userEl.style.display = 'flex';
+      if (nameEl) nameEl.textContent = user.fname;
+    } else {
+      guestEl.style.display = 'flex';
+      if (regEl) regEl.style.display = 'flex';
+      userEl.style.display = 'none';
+    }
+  }
+  function initUserDropdown() {
+    var trigger  = document.getElementById('nav-user-trigger');
+    var dropdown = document.getElementById('nav-user-dropdown');
+    if (!trigger || !dropdown) return;
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var open = dropdown.classList.toggle('open');
+      trigger.classList.toggle('open', open);
+    });
+    document.addEventListener('click', function() {
+      dropdown.classList.remove('open');
+      if (trigger) trigger.classList.remove('open');
+    });
+    dropdown.addEventListener('click', function(e) { e.stopPropagation(); });
+  }
+  window.signOut = function() {
+    fetch('/api/logout', { method: 'POST', credentials: 'include' }).catch(function(){});
+    localStorage.removeItem('forza_user');
+    updateAuthNav();
+    var dd = document.getElementById('nav-user-dropdown');
+    if (dd) dd.classList.remove('open');
+    setTimeout(function() { location.href = 'home.html'; }, 300);
+  };
+  document.addEventListener('DOMContentLoaded', function() {
+    updateAuthNav();
+    initUserDropdown();
+  });
+})();
+</script>
+<script src="forza-i18n.js"></script>
+</body>

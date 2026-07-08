@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us – Forza Sport E‑Store</title>
+  <link rel="stylesheet" href="style.css">
+  
+  <link rel="icon" type="image/x-icon" href="./Images/favicon.jpeg">
+  <style>
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(232,0,13,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(232,0,13,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: 0;
+      pointer-events: none;
+    }
+ 
+    .contact-wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+    }
+ 
+    .page-header h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.3rem;
+    }
+    .page-header p {
+      color: var(--muted);
+      font-size: 1rem;
+      margin-bottom: 2.5rem;
+    }
+ 
+    /* Contact Cards */
+    .contact-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-bottom: 2.5rem;
+    }
+ 
+    .contact-card {
+      background: var(--dark3);
+      border: 1px solid #252525;
+      border-radius: 8px;
+      padding: 1.8rem 1.4rem;
+      text-align: center;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .contact-card:hover {
+      border-color: var(--red);
+      transform: translateY(-4px);
+    }
+    .contact-card .icon {
+      font-size: 2.2rem;
+      margin-bottom: 0.9rem;
+      display: block;
+    }
+    .contact-card h3 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--red);
+      margin-bottom: 0.5rem;
+    }
+    .contact-card a,
+    .contact-card p {
+      font-size: 0.95rem;
+      color: #ccc;
+      text-decoration: none;
+      line-height: 1.6;
+      display: block;
+    }
+    .contact-card a:hover { color: #fff; }
+ 
+    /* Form */
+    .contact-form-panel {
+      background: var(--dark3);
+      border: 1px solid #252525;
+      border-radius: 8px;
+      padding: 2rem;
+    }
+    .contact-form-panel h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid #2a2a2a;
+      padding-bottom: 0.8rem;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .form-group { margin-bottom: 1rem; }
+    label {
+      display: block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: var(--dark4);
+      border: 1.5px solid #333;
+      border-radius: 5px;
+      color: #fff;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+      box-sizing: border-box;
+    }
+    input:focus, textarea:focus { border-color: var(--red); }
+    input::placeholder, textarea::placeholder { color: #555; }
+    textarea { resize: vertical; min-height: 130px; }
+ 
+    .send-btn {
+      width: 100%;
+      padding: 0.9rem;
+      background: var(--red);
+      color: #fff;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .send-btn:hover { background: var(--red2); transform: translateY(-2px); }
+ 
+    #contact-success {
+      display: none;
+      background: rgba(40,167,69,0.12);
+      border: 1px solid #28a745;
+      color: #5eda79;
+      padding: 1rem;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 0.9rem;
+      margin-bottom: 1.2rem;
+    }
+    
+ 
+    @media (max-width: 640px) {
+      .contact-cards { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+
+<style id="forza-nav-css">
+/* ── Divider between nav links and auth buttons ── */
+.nav-divider-li {
+  width: 1px;
+  height: 18px;
+  background: rgba(255,255,255,0.15);
+  margin: 0 0.6rem;
+  list-style: none;
+}
+.nav-li-auth {
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+/* SIGN IN */
+.nav-btn-signin {
+  position: relative;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #bbb;
+  text-decoration: none;
+  padding: 0.44rem 0.9rem;
+  border-radius: 3px;
+  overflow: hidden;
+  transition: color 0.25s;
+  white-space: nowrap;
+}
+.nav-btn-signin::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.06);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+  border-radius: 3px;
+}
+.nav-btn-signin::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 100%; height: 2px;
+  background: linear-gradient(90deg, #e8000d, #ff6b6b);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.nav-btn-signin:hover { color: #fff; }
+.nav-btn-signin:hover::before { transform: scaleX(1); }
+.nav-btn-signin:hover::after  { transform: scaleX(1); }
+/* REGISTER */
+.nav-btn-register {
+  position: relative;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #fff;
+  text-decoration: none;
+  padding: 0.44rem 1.1rem;
+  background: linear-gradient(135deg, #e8000d 0%, #c0000b 100%);
+  border-radius: 3px;
+  box-shadow: 0 0 12px rgba(232,0,13,0.35), inset 0 1px 0 rgba(255,255,255,0.12);
+  overflow: hidden;
+  transition: box-shadow 0.25s, transform 0.2s;
+  white-space: nowrap;
+}
+.nav-btn-register::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.22), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.5s ease;
+}
+.nav-btn-register:hover {
+  box-shadow: 0 0 22px rgba(232,0,13,0.65), 0 4px 16px rgba(232,0,13,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+  transform: translateY(-2px);
+}
+.nav-btn-register:hover::before { left: 160%; }
+/* USER DROPDOWN */
+.nav-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  padding: 0.44rem 0.9rem;
+  border: 2px solid rgba(255,255,255,0.18);
+  border-radius: 3px;
+  transition: border-color 0.2s;
+  user-select: none;
+  white-space: nowrap;
+}
+.nav-user-info:hover { border-color: var(--red); }
+.nav-chevron { font-size: 0.65rem; transition: transform 0.25s; }
+.nav-user-info.open .nav-chevron { transform: rotate(180deg); }
+.nav-user-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 200px;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-top: 3px solid var(--red);
+  border-radius: 6px;
+  padding: 0.5rem 0;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  z-index: 600;
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+.nav-user-dropdown.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.nud-item {
+  display: flex; align-items: center; gap: 0.6rem;
+  width: 100%; padding: 0.65rem 1.1rem;
+  color: #ccc; text-decoration: none;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.9rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  background: none; border: none; cursor: pointer; text-align: left;
+  transition: background 0.15s, color 0.15s;
+}
+.nud-item:hover { background: rgba(232,0,13,0.12); color: #fff; }
+.nud-signout { color: #e8000d; }
+.nud-signout:hover { background: rgba(232,0,13,0.15); color: #ff3333; }
+.nud-divider { height: 1px; background: #222; margin: 0.3rem 0; }
+</style>
+</head>
+<body>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="home.html" class="nav-logo">
+    <img src="./Images/logo.jpeg" alt="Forza Sport Logo">
+    <span>Forza Sport</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="home.html">Home</a></li>
+    <li><a href="product.html">Products</a></li>
+    <li><a href="contact.html" class="active">Contact</a></li>
+    <li class="nav-divider-li"></li>
+    <li id="nav-li-guest" class="nav-li-auth">
+      <a href="login.html" class="nav-btn-signin">Sign In</a>
+    </li>
+    <li id="nav-li-register" class="nav-li-auth">
+      <a href="register.html" class="nav-btn-register">Register</a>
+    </li>
+    <li id="nav-li-user" class="nav-li-auth" style="display:none; position:relative;">
+      <div class="nav-user-info" id="nav-user-trigger">
+        <span class="nav-avatar">👤</span>
+        <span id="nav-username">User</span>
+        <span class="nav-chevron">▾</span>
+      </div>
+      <div class="nav-user-dropdown" id="nav-user-dropdown">
+        <a href="account.html" class="nud-item">👤 My Profile</a>
+        <a href="history.html" class="nud-item">📋 Order History</a>
+        <a href="cart.html"    class="nud-item">🛒 My Cart</a>
+        <div class="nud-divider"></div>
+        <button class="nud-item nud-signout" onclick="signOut()">🚪 Sign Out</button>
+      </div>
+    </li>
+  </ul>
+  <a href="cart.html" class="nav-cart-btn">
+    🛒 Cart <span class="cart-badge">0</span>
+  </a>
+</nav>
+ 
+<div class="contact-wrapper">
+ 
+  <section class="page-header">
+    <h1>Contact Us</h1>
+  
+  </section>
+ 
+  <!-- CONTACT CARDS -->
+  <div class="contact-cards">
+ 
+    <div class="contact-card">
+      <span class="icon">📧</span>
+      <h3>Email</h3>
+      <a href="mailto:seraj.haneia@gmail.com">seraj.haneia@gmail.com</a>
+      <p style="font-size:0.8rem;color:#555;margin-top:0.4rem"></p>
+    </div>
+ 
+    <div class="contact-card">
+      <span class="icon">📞</span>
+      <h3>Phone</h3>
+      <a href="tel:+21897366351">+218 97 366 351</a>
+      <p style="font-size:0.8rem;color:#555;margin-top:0.4rem"></p>
+    </div>
+ 
+    <div class="contact-card">
+      <span class="icon">💬</span>
+      <h3>WhatsApp</h3>
+      <a href="https://wa.me/21897366351" target="_blank">+218 97 366 351</a>
+      <p style="font-size:0.8rem;color:#555;margin-top:0.4rem">Chat with us directly</p>
+    </div>
+ 
+  </div>
+ 
+  <!-- CONTACT FORM -->
+  <div class="contact-form-panel">
+    <h2>Send Us a Message</h2>
+    <div id="contact-success">✓ Thank you! Your message has been sent — we'll get back to you shortly.</div>
+    <form id="contact-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="c-name">Name</label>
+          <input type="text" id="c-name" placeholder="Your full name" required>
+        </div>
+        <div class="form-group">
+          <label for="c-email">Email</label>
+          <input type="email" id="c-email" placeholder="you@example.com" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="c-msg">Message</label>
+        <textarea id="c-msg" placeholder="How can we help?" required></textarea>
+      </div>
+      <button type="submit" class="send-btn">Send Message</button>
+    </form>
+  </div>
+      
+</div>
+ 
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-links">
+    <h4>Quick Links</h4>
+    <ul>
+      <li><a href="home.html">Home</a></li>
+      <li><a href="product.html">Products</a></li>
+      <li><a href="cart.html">Cart</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="register.html">Register</a></li>
+    </ul>
+  </div>
+  <div class="footer-social">
+    <h4>Get In Touch</h4>
+    <ul>
+      <li><a href="mailto:seraj.haneia@gmail.com">📧 seraj.haneia@gmail.com</a></li>
+      <li><a href="tel:+21897366351">📞 +218 97 366 351</a></li>
+      <li><a href="https://wa.me/21897366351" target="_blank">💬 WhatsApp Us</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <p>&copy; 2026 Forza Sport E‑Store. All rights reserved. | Sport. Style. Energy.</p>
+</div>
+ 
+<script src="cart.js"></script>
+<script>
+document.getElementById('contact-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const name = document.getElementById('c-name').value.trim();
+  const email = document.getElementById('c-email').value.trim();
+  const msg = document.getElementById('c-msg').value.trim();
+  if (!name || !email || !msg) {
+    alert('⚠️ Please fill in all required fields.');
+    return;
+  }
+  document.getElementById('contact-success').style.display = 'block';
+  this.reset();
+  document.getElementById('contact-success').scrollIntoView({ behavior: 'smooth', block: 'center' });
+});
+</script>
+
+
+
+<script>
+(function() {
+  window.updateAuthNav = updateAuthNav;
+  function updateAuthNav() {
+    var guestEl = document.getElementById('nav-li-guest');
+    var regEl   = document.getElementById('nav-li-register');
+    var userEl  = document.getElementById('nav-li-user');
+    var nameEl  = document.getElementById('nav-username');
+    if (!guestEl) return;
+    var user = null;
+    try { user = JSON.parse(localStorage.getItem('forza_user')); } catch(e) {}
+    if (user && user.fname) {
+      guestEl.style.display = 'none';
+      if (regEl) regEl.style.display = 'none';
+      userEl.style.display = 'flex';
+      if (nameEl) nameEl.textContent = user.fname;
+    } else {
+      guestEl.style.display = 'flex';
+      if (regEl) regEl.style.display = 'flex';
+      userEl.style.display = 'none';
+    }
+  }
+  function initUserDropdown() {
+    var trigger  = document.getElementById('nav-user-trigger');
+    var dropdown = document.getElementById('nav-user-dropdown');
+    if (!trigger || !dropdown) return;
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var open = dropdown.classList.toggle('open');
+      trigger.classList.toggle('open', open);
+    });
+    document.addEventListener('click', function() {
+      dropdown.classList.remove('open');
+      if (trigger) trigger.classList.remove('open');
+    });
+    dropdown.addEventListener('click', function(e) { e.stopPropagation(); });
+  }
+  window.signOut = function() {
+    fetch('/api/logout', { method: 'POST', credentials: 'include' }).catch(function(){});
+    localStorage.removeItem('forza_user');
+    updateAuthNav();
+    var dd = document.getElementById('nav-user-dropdown');
+    if (dd) dd.classList.remove('open');
+    setTimeout(function() { location.href = 'home.html'; }, 300);
+  };
+  document.addEventListener('DOMContentLoaded', function() {
+    updateAuthNav();
+    initUserDropdown();
+  });
+})();
+</script>
+<script src="forza-i18n.js"></script>
+</body>
+</html>

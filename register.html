@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register – Forza Sport E‑Store</title>
+  
+  <link rel="icon" type="image/x-icon" href="./Images/favicon.jpeg">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(232,0,13,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(232,0,13,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .reg-wrapper {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.5rem;
+    }
+    .reg-card {
+      background: var(--dark3);
+      border: 1px solid #252525;
+      border-radius: 10px;
+      max-width: 520px;
+      width: 100%;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .reg-banner {
+      background: linear-gradient(135deg, var(--red) 0%, #7b0008 100%);
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .reg-banner::before {
+      content: 'F';
+      position: absolute;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 12rem;
+      color: rgba(255,255,255,0.06);
+      top: -30px;
+      right: -20px;
+      line-height: 1;
+    }
+    .reg-banner img {
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+      border-radius: 50%;
+      margin-bottom: 0.8rem;
+      position: relative;
+    }
+    .reg-banner h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+      position: relative;
+    }
+    .reg-banner p {
+      font-size: 0.85rem;
+      opacity: 0.85;
+      position: relative;
+    }
+    .reg-form-area { padding: 2rem; }
+ 
+    #success-msg {
+      display: none;
+      background: rgba(40,167,69,0.12);
+      border: 1px solid #28a745;
+      color: #5eda79;
+      padding: 1rem;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 0.9rem;
+      margin-bottom: 1.2rem;
+    }
+    
+ 
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+    }
+    .form-group { margin-bottom: 1rem; }
+    label {
+      display: block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="tel"],
+    select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: var(--dark4);
+      border: 1.5px solid #333;
+      border-radius: 5px;
+      color: #fff;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus, select:focus { border-color: var(--red); }
+    input::placeholder { color: #555; }
+    .input-error { border-color: #e8000d !important; }
+    .err-msg { font-size: 0.78rem; color: var(--red); margin-top: 0.3rem; display: none; }
+    .err-msg.show { display: block; }
+ 
+    .divider { border: none; border-top: 1px solid #2a2a2a; margin: 1.2rem 0; }
+ 
+    .submit-btn {
+      width: 100%;
+      padding: 0.9rem;
+      background: var(--red);
+      color: #fff;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .submit-btn:hover { background: var(--red2); transform: translateY(-2px); }
+ 
+    .reset-btn {
+      width: 100%;
+      padding: 0.75rem;
+      background: transparent;
+      color: var(--muted);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border: 1.5px solid #333;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 0.6rem;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .reset-btn:hover { border-color: #555; color: #fff; }
+ 
+    .signin-note {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 1.2rem;
+    }
+    .signin-note a { color: var(--red); text-decoration: none; font-weight: 600; }
+    .signin-note a:hover { text-decoration: underline; }
+ 
+    @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+  </style>
+ 
+<style id="forza-nav-css">
+/* ── Divider between nav links and auth buttons ── */
+.nav-divider-li {
+  width: 1px;
+  height: 18px;
+  background: rgba(255,255,255,0.15);
+  margin: 0 0.6rem;
+  list-style: none;
+}
+.nav-li-auth {
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+/* SIGN IN */
+.nav-btn-signin {
+  position: relative;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #bbb;
+  text-decoration: none;
+  padding: 0.44rem 0.9rem;
+  border-radius: 3px;
+  overflow: hidden;
+  transition: color 0.25s;
+  white-space: nowrap;
+}
+.nav-btn-signin::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.06);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+  border-radius: 3px;
+}
+.nav-btn-signin::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 100%; height: 2px;
+  background: linear-gradient(90deg, #e8000d, #ff6b6b);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.nav-btn-signin:hover { color: #fff; }
+.nav-btn-signin:hover::before { transform: scaleX(1); }
+.nav-btn-signin:hover::after  { transform: scaleX(1); }
+/* REGISTER */
+.nav-btn-register {
+  position: relative;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #fff;
+  text-decoration: none;
+  padding: 0.44rem 1.1rem;
+  background: linear-gradient(135deg, #e8000d 0%, #c0000b 100%);
+  border-radius: 3px;
+  box-shadow: 0 0 12px rgba(232,0,13,0.35), inset 0 1px 0 rgba(255,255,255,0.12);
+  overflow: hidden;
+  transition: box-shadow 0.25s, transform 0.2s;
+  white-space: nowrap;
+}
+.nav-btn-register::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.22), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.5s ease;
+}
+.nav-btn-register:hover {
+  box-shadow: 0 0 22px rgba(232,0,13,0.65), 0 4px 16px rgba(232,0,13,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+  transform: translateY(-2px);
+}
+.nav-btn-register:hover::before { left: 160%; }
+/* USER DROPDOWN */
+.nav-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  padding: 0.44rem 0.9rem;
+  border: 2px solid rgba(255,255,255,0.18);
+  border-radius: 3px;
+  transition: border-color 0.2s;
+  user-select: none;
+  white-space: nowrap;
+}
+.nav-user-info:hover { border-color: var(--red); }
+.nav-chevron { font-size: 0.65rem; transition: transform 0.25s; }
+.nav-user-info.open .nav-chevron { transform: rotate(180deg); }
+.nav-user-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 200px;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-top: 3px solid var(--red);
+  border-radius: 6px;
+  padding: 0.5rem 0;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  z-index: 600;
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+.nav-user-dropdown.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.nud-item {
+  display: flex; align-items: center; gap: 0.6rem;
+  width: 100%; padding: 0.65rem 1.1rem;
+  color: #ccc; text-decoration: none;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.9rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  background: none; border: none; cursor: pointer; text-align: left;
+  transition: background 0.15s, color 0.15s;
+}
+.nud-item:hover { background: rgba(232,0,13,0.12); color: #fff; }
+.nud-signout { color: #e8000d; }
+.nud-signout:hover { background: rgba(232,0,13,0.15); color: #ff3333; }
+.nud-divider { height: 1px; background: #222; margin: 0.3rem 0; }
+</style>
+</head>
+<body>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="home.html" class="nav-logo">
+    <img src="./Images/logo.jpeg" alt="Forza Sport Logo">
+    <span>Forza Sport</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="home.html">Home</a></li>
+    <li><a href="product.html">Products</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li class="nav-divider-li"></li>
+    <li id="nav-li-guest" class="nav-li-auth">
+      <a href="login.html" class="nav-btn-signin">Sign In</a>
+    </li>
+    <li id="nav-li-register" class="nav-li-auth">
+      <a href="register.html" class="nav-btn-register">Register</a>
+    </li>
+    <li id="nav-li-user" class="nav-li-auth" style="display:none; position:relative;">
+      <div class="nav-user-info" id="nav-user-trigger">
+        <span class="nav-avatar">👤</span>
+        <span id="nav-username">User</span>
+        <span class="nav-chevron">▾</span>
+      </div>
+      <div class="nav-user-dropdown" id="nav-user-dropdown">
+        <a href="account.html" class="nud-item">👤 My Profile</a>
+        <a href="history.html" class="nud-item">📋 Order History</a>
+        <a href="cart.html"    class="nud-item">🛒 My Cart</a>
+        <div class="nud-divider"></div>
+        <button class="nud-item nud-signout" onclick="signOut()">🚪 Sign Out</button>
+      </div>
+    </li>
+  </ul>
+  <a href="cart.html" class="nav-cart-btn">
+    🛒 Cart <span class="cart-badge">0</span>
+  </a>
+</nav>
+ 
+<div class="reg-wrapper">
+  <div class="reg-card">
+    <div class="reg-banner">
+      <img src="./Images/logo.jpeg" alt="Forza Sport">
+      <h1>Create Account</h1>
+      <p>Join Forza Sport and unlock exclusive member deals</p>
+    </div>
+    <div class="reg-form-area">
+      <div id="success-msg">🎉 Account created! Welcome to Forza Sport!</div>
+ 
+      <form id="reg-form" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fname">First Name *</label>
+            <input type="text" id="fname" placeholder="First name" required>
+            <p class="err-msg" id="fname-err">Required</p>
+          </div>
+          <div class="form-group">
+            <label for="lname">Last Name *</label>
+            <input type="text" id="lname" placeholder="Last name" required>
+            <p class="err-msg" id="lname-err">Required</p>
+          </div>
+        </div>
+ 
+        <div class="form-group">
+          <label for="email">Email Address *</label>
+          <input type="email" id="email" placeholder="you@example.com" required>
+          <p class="err-msg" id="email-err">Enter a valid email</p>
+        </div>
+ 
+        <div class="form-group">
+          <label for="phone">Phone Number *</label>
+          <input type="tel" id="phone" placeholder="0912345678" pattern="[0-9]{10}" required>
+          <p class="err-msg" id="phone-err">Enter 10-digit phone number</p>
+        </div>
+ 
+        <div class="form-row">
+          <div class="form-group">
+            <label for="password">Password *</label>
+            <input type="password" id="password" placeholder="Min. 8 characters" required>
+            <p class="err-msg" id="pw-err">Minimum 8 characters</p>
+          </div>
+          <div class="form-group">
+            <label for="confirm-pw">Confirm Password *</label>
+            <input type="password" id="confirm-pw" placeholder="Repeat password" required>
+            <p class="err-msg" id="cpw-err">Passwords do not match</p>
+          </div>
+        </div>
+ 
+        <hr class="divider">
+ 
+        <div class="form-group">
+          <label for="address">Delivery Address *</label>
+          <input type="text" id="address" placeholder="House no., Street, District" required>
+          <p class="err-msg" id="address-err">Please enter your delivery address</p>
+        </div>
+ 
+        <div class="form-group">
+          <label for="city">City / Province *</label>
+          <input type="text" id="city" placeholder="e.g. Benghazi" required>
+          <p class="err-msg" id="city-err">Required</p>
+        </div>
+ 
+        <button type="submit" class="submit-btn">Create Account</button>
+        <button type="reset" class="reset-btn">Clear Form</button>
+ 
+        <p class="signin-note">Already have an account? <a href="#">Sign in here</a></p>
+      </form>
+    </div>
+  </div>
+</div>
+ 
+<!-- FOOTER -->
+<footer class="footer" style="position:relative;z-index:1">
+  <div class="footer-brand">
+    <img src="./Images/logo.jpeg" alt="Forza Sport">
+    <p>Sport. Style. Energy. — Your premium online sports store in Libya.</p>
+  </div>
+  <div class="footer-links">
+    <h4>Quick Links</h4>
+    <ul>
+      <li><a href="home.html">Home</a></li>
+      <li><a href="product.html">Products</a></li>
+      <li><a href="cart.html">Cart</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </div>
+  <div class="footer-social">
+    <h4>Contact</h4>
+    <ul>
+      <li><a href="mailto:seraj.haneia@gmail.com">seraj.haneia@gmail.com</a></li>
+      <li><a href="#">📍 Benghazi, Libya</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom" style="position:relative;z-index:1">
+  <p>&copy; 2026 Forza Sport E‑Store. All rights reserved.</p>
+</div>
+ 
+<script src="cart.js"></script>
+<script>
+const form = document.getElementById('reg-form');
+ 
+function setErr(id, show) {
+  document.getElementById(id).classList.toggle('show', show);
+}
+function setInvalid(id, invalid) {
+  document.getElementById(id).classList.toggle('input-error', invalid);
+}
+ 
+form.addEventListener('submit', async function(e) {
+  e.preventDefault();
+  let valid = true;
+ 
+  const fname    = document.getElementById('fname').value.trim();
+  const lname    = document.getElementById('lname').value.trim();
+  const email    = document.getElementById('email').value.trim();
+  const phone    = document.getElementById('phone').value.trim();
+  const pw       = document.getElementById('password').value;
+  const cpw      = document.getElementById('confirm-pw').value;
+  const address  = document.getElementById('address').value.trim();
+  const city     = document.getElementById('city').value.trim();
+  // Validate
+  [['fname','fname-err',!fname],['lname','lname-err',!lname]].forEach(([fid,eid,err]) => {
+    setErr(eid, err); setInvalid(fid, err); if (err) valid = false;
+  });
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  setErr('email-err', !emailOk); setInvalid('email', !emailOk); if (!emailOk) valid = false;
+  const phoneOk = /^[0-9]{10}$/.test(phone);
+  setErr('phone-err', !phoneOk); setInvalid('phone', !phoneOk); if (!phoneOk) valid = false;
+  const pwOk = pw.length >= 8;
+  setErr('pw-err', !pwOk); setInvalid('password', !pwOk); if (!pwOk) valid = false;
+  const cpwOk = pw === cpw;
+  setErr('cpw-err', !cpwOk); setInvalid('confirm-pw', !cpwOk); if (!cpwOk) valid = false;
+  [['address','address-err',!address],['city','city-err',!city]].forEach(([fid,eid,err]) => {
+    setErr(eid,err); setInvalid(fid,err); if(err) valid=false;
+  });
+ 
+  if (!valid) return;
+ 
+  const submitBtn = form.querySelector('.submit-btn');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Creating Account…';
+ 
+  try {
+    const result = await registerUser({ fname, lname, email, phone, password: pw, address, city });
+ 
+    if (result.ok) {
+      saveUser(result.user);
+      document.getElementById('success-msg').style.display = 'block';
+      form.reset();
+      document.getElementById('success-msg').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => { location.href = 'product.html'; }, 1500);
+    } else {
+      alert(result.message || 'Registration failed. Please try again.');
+    }
+  } catch (err) {
+    alert('Something went wrong creating your account. Please try again.');
+  }
+ 
+  submitBtn.disabled = false;
+  submitBtn.textContent = 'Create Account';
+});
+ 
+form.addEventListener('reset', () => {
+  setTimeout(() => {
+    document.getElementById('success-msg').style.display = 'none';
+    document.querySelectorAll('.err-msg').forEach(e => e.classList.remove('show'));
+    document.querySelectorAll('.input-error').forEach(e => e.classList.remove('input-error'));
+  }, 10);
+});
+</script>
+ 
+ 
+ 
+<script>
+(function() {
+  window.updateAuthNav = updateAuthNav;
+  function updateAuthNav() {
+    var guestEl = document.getElementById('nav-li-guest');
+    var regEl   = document.getElementById('nav-li-register');
+    var userEl  = document.getElementById('nav-li-user');
+    var nameEl  = document.getElementById('nav-username');
+    if (!guestEl) return;
+    var user = null;
+    try { user = JSON.parse(localStorage.getItem('forza_user')); } catch(e) {}
+    if (user && user.fname) {
+      guestEl.style.display = 'none';
+      if (regEl) regEl.style.display = 'none';
+      userEl.style.display = 'flex';
+      if (nameEl) nameEl.textContent = user.fname;
+    } else {
+      guestEl.style.display = 'flex';
+      if (regEl) regEl.style.display = 'flex';
+      userEl.style.display = 'none';
+    }
+  }
+  function initUserDropdown() {
+    var trigger  = document.getElementById('nav-user-trigger');
+    var dropdown = document.getElementById('nav-user-dropdown');
+    if (!trigger || !dropdown) return;
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var open = dropdown.classList.toggle('open');
+      trigger.classList.toggle('open', open);
+    });
+    document.addEventListener('click', function() {
+      dropdown.classList.remove('open');
+      if (trigger) trigger.classList.remove('open');
+    });
+    dropdown.addEventListener('click', function(e) { e.stopPropagation(); });
+  }
+  window.signOut = function() {
+    fetch('/api/logout', { method: 'POST', credentials: 'include' }).catch(function(){});
+    localStorage.removeItem('forza_user');
+    updateAuthNav();
+    var dd = document.getElementById('nav-user-dropdown');
+    if (dd) dd.classList.remove('open');
+    setTimeout(function() { location.href = 'home.html'; }, 300);
+  };
+  document.addEventListener('DOMContentLoaded', function() {
+    updateAuthNav();
+    initUserDropdown();
+  });
+})();
+</script>
+<script src="forza-i18n.js"></script>
+</body>
+</html>
+ 

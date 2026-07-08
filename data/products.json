@@ -1,0 +1,183 @@
+[
+  {
+    "id": 1,
+    "name": "Black Adidas Cleats",
+    "price": 260,
+    "cat": "shoes",
+    "img": "Images/black adidas cleats 1.jpeg",
+    "desc": "Sleek all-black adidas-style cleats built for grip and control on match day.",
+    "images": [
+      "images/black adidas cleats 1.jpeg",
+      "images/black adidas cleats 2.jpeg",
+      "images/black adidas cleats 3.jpeg"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Black & Gold Adidas Cleats",
+    "price": 275,
+    "cat": "shoes",
+    "img": "Images/black and gold adidas 1.jpeg",
+    "desc": "Bold black and gold colorway with a lightweight, responsive sole.",
+    "images": [
+      "images/black and gold adidas 1.jpeg",
+      "images/black and gold adidas 2.jpeg",
+      "images/black and gold adidas 3.jpeg"
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Black & Yellow Boots",
+    "price": 250,
+    "cat": "shoes",
+    "img": "Images/black and yellow boots 1.png",
+    "desc": "High-visibility black and yellow boots for speed and standout style.",
+    "images": [
+      "images/black and yellow boots 1.png",
+      "images/black and yellow boots 2.png",
+      "images/black and yellow boots 3.png"
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Black Cleats",
+    "price": 240,
+    "cat": "shoes",
+    "img": "Images/black cleats 1.jpeg",
+    "desc": "Classic matte-black cleats — clean, durable, and match-ready.",
+    "images": [
+      "images/black cleats 1.jpeg",
+      "images/black cleats 2.jpeg",
+      "images/black cleats 3.jpeg"
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Cyan Adidas Cleats",
+    "price": 265,
+    "cat": "shoes",
+    "img": "Images/Cyan adidas 1.jpeg",
+    "desc": "Eye-catching cyan adidas-style cleats with a supportive fit.",
+    "images": [
+      "images/Cyan adidas 1.jpeg",
+      "images/Cyan adidas 2.jpeg",
+      "images/Cyan adidas 3.jpeg"
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Cyan-Green Cleats",
+    "price": 260,
+    "cat": "shoes",
+    "img": "Images/cyan green cleat 1.jpeg",
+    "desc": "Vibrant cyan-green cleats designed for quick cuts and sprints.",
+    "images": [
+      "images/cyan green cleat 1.jpeg",
+      "images/cyan green cleat 2.jpeg",
+      "images/cyan green cleat 3.jpeg"
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Green Cleats",
+    "price": 255,
+    "cat": "shoes",
+    "img": "Images/green cleats 1.jpeg",
+    "desc": "Sharp green cleats offering a great mix of comfort and traction.",
+    "images": [
+      "images/green cleats 1.jpeg",
+      "images/green cleats 2.jpg",
+      "images/Green cleats 3.jpeg"
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Mercury Cleats",
+    "price": 270,
+    "cat": "shoes",
+    "img": "Images/mercury cleats 1.jpg",
+    "desc": "Speed-focused Mercury-style cleats for explosive acceleration.",
+    "images": [
+      "images/mercury cleats 1.jpg",
+      "images/mercury cleats 3.jpeg"
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Pink Adidas Cleats",
+    "price": 260,
+    "cat": "shoes",
+    "img": "Images/pink adidas cleats 1.jpeg",
+    "desc": "Standout pink adidas-style cleats with a snug, locked-in feel.",
+    "images": [
+      "images/pink adidas cleats 1.jpeg",
+      "images/pink adidas cleats 2.jpeg",
+      "images/pink adidas cleats 3.jpeg"
+    ]
+  },
+  {
+    "id": 10,
+    "name": "Purple Boots",
+    "price": 245,
+    "cat": "shoes",
+    "img": "Images/purple boots 1.png",
+    "desc": "Distinctive purple boots built for all-surface performance.",
+    "images": [
+      "images/purple boots 1.png",
+      "images/purple boots 2.png",
+      "images/purple boots 3.png"
+    ]
+  },
+  {
+    "id": 11,
+    "name": "White & Black Adidas Cleats",
+    "price": 265,
+    "cat": "shoes",
+    "img": "Images/white and black adidas cleats 1.jpeg",
+    "desc": "Classic white and black adidas-style cleats with reliable grip.",
+    "images": [
+      "images/white and black adidas cleats 1.jpeg",
+      "images/white and black adidas cleats 2.jpeg",
+      "images/white and black adidas cleats 3.jpeg"
+    ]
+  },
+  {
+    "id": 12,
+    "name": "White & Cyan Adidas Cleats",
+    "price": 265,
+    "cat": "shoes",
+    "img": "Images/White and cyan adidas cleats 1.jpeg",
+    "desc": "Fresh white and cyan colorway paired with a lightweight build.",
+    "images": [
+      "images/White and cyan adidas cleats 1.jpeg",
+      "images/White and cyan adidas cleats 2.jpeg",
+      "images/White and cyan adidas cleats 3.jpeg"
+    ]
+  },
+  {
+    "id": 13,
+    "name": "White & Blue X Cleats",
+    "price": 275,
+    "cat": "shoes",
+    "img": "Images/White andd blue X cleats 1.jpeg",
+    "desc": "X-style cleats in white and blue, built for agile, cutting play.",
+    "images": [
+      "images/White andd blue X cleats 1.jpeg",
+      "images/White andd blue X cleats 2.jpeg",
+      "images/White andd blue X cleats 3.jpeg"
+    ]
+  },
+  {
+    "id": 14,
+    "name": "White CR7 Cleats",
+    "price": 290,
+    "cat": "shoes",
+    "img": "Images/White CR7 cleats 1.jpeg",
+    "desc": "Premium CR7-signature-style cleats in a clean white finish.",
+    "images": [
+      "images/White CR7 cleats 1.jpeg",
+      "images/White CR7 cleats 2.jpeg",
+      "images/White CR7 cleats 3.jpeg"
+    ]
+  }
+]

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order History – Forza Sport E‑Store</title>
+  <link rel="stylesheet" href="style.css">
+  
+  <link rel="icon" type="image/x-icon" href="./Images/favicon.jpeg">
+  <style>
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: linear-gradient(rgba(232,0,13,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(232,0,13,0.03) 1px, transparent 1px);
+      background-size: 60px 60px; z-index: 0; pointer-events: none;
+    }
+    .history-wrapper { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+    .empty-state { text-align: center; padding: 4rem 2rem; color: var(--muted); }
+    .empty-state h2 { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; letter-spacing: 0.06em; margin-bottom: 1rem; }
+    .order-card {
+      background: var(--dark3); border: 1px solid #252525; border-radius: 8px;
+      margin-bottom: 1.5rem; overflow: hidden; transition: border-color 0.2s;
+    }
+    .order-card:hover { border-color: #333; }
+    .order-header {
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
+      gap: 0.8rem; padding: 1.2rem 1.5rem;
+      background: linear-gradient(90deg, rgba(232,0,13,0.05) 0%, transparent 100%);
+      border-bottom: 1px solid #222; cursor: pointer;
+    }
+    .order-num { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.08em; color: var(--red); }
+    .order-date { font-size: 0.82rem; color: var(--muted); }
+    .order-total { font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 700; }
+    .order-status {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      padding: 0.25rem 0.65rem; border-radius: 20px;
+    }
+    .status-confirmed { background: rgba(40,167,69,0.15); color: #5eda79; border: 1px solid rgba(40,167,69,0.3); }
+    .status-pending, .status-pendingapproval { background: rgba(255,165,0,0.15); color: orange; border: 1px solid rgba(255,165,0,0.3); }
+    .status-processing { background: rgba(0,150,255,0.15); color: #4db8ff; border: 1px solid rgba(0,150,255,0.3); }
+    .status-shipped { background: rgba(147,51,234,0.15); color: #c084fc; border: 1px solid rgba(147,51,234,0.3); }
+    .status-delivered { background: rgba(40,167,69,0.15); color: #5eda79; border: 1px solid rgba(40,167,69,0.3); }
+    .status-cancelled { background: rgba(232,0,13,0.15); color: #e8000d; border: 1px solid rgba(232,0,13,0.3); }
+    .order-expand-icon { font-size: 0.85rem; color: #555; transition: transform 0.2s; }
+    .order-card.open .order-expand-icon { transform: rotate(180deg); }
+    .order-body { display: block; padding: 1.5rem; }
+    .order-card.open .order-body { display: block; }
+    .order-meta {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem; margin-bottom: 1.5rem;
+    }
+    .meta-item label { display: block; font-family: 'Barlow Condensed', sans-serif; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.2rem; }
+    .meta-item span { font-size: 0.88rem; color: #fff; }
+    .items-table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+    .items-table th { font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); padding: 0.4rem 0.6rem; text-align: left; border-bottom: 1px solid #2a2a2a; }
+    .items-table td { padding: 0.55rem 0.6rem; font-size: 0.88rem; border-bottom: 1px solid #1e1e1e; }
+    .items-table tr:last-child td { border-bottom: none; }
+    .items-table .td-price { text-align: right; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; }
+    .order-totals { margin-top: 1rem; border-top: 1px solid #2a2a2a; padding-top: 1rem; display: flex; flex-direction: column; align-items: flex-end; gap: 0.3rem; }
+    .total-row { display: flex; gap: 2rem; font-size: 0.88rem; color: var(--muted); }
+    .total-row.grand { font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 700; color: #fff; }
+    .total-row span:last-child { min-width: 90px; text-align: right; }
+    .clear-history-btn {
+      margin-top: 2rem; padding: 0.65rem 1.5rem;
+      background: transparent; color: #555; border: 1px solid #333;
+      border-radius: 4px; font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; cursor: pointer; transition: all 0.2s;
+    }
+    .clear-history-btn:hover { border-color: var(--red); color: var(--red); }
+
+    /* Product image in history */
+    .item-img-wrap { width: 48px; height: 48px; border-radius: 6px; overflow: hidden; background: #1a1a1a; flex-shrink: 0; }
+    .item-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    .item-name-cell { display: flex; align-items: center; gap: 0.8rem; }
+    .item-name-text { font-weight: 600; }
+    .item-cat-text { font-size: 0.75rem; color: var(--muted); margin-top: 0.1rem; }
+
+    @media (max-width: 580px) { .order-header { flex-direction: column; align-items: flex-start; } }
+  </style>
+
+<style id="forza-nav-css">
+/* ── Divider between nav links and auth buttons ── */
+.nav-divider-li {
+  width: 1px;
+  height: 18px;
+  background: rgba(255,255,255,0.15);
+  margin: 0 0.6rem;
+  list-style: none;
+}
+.nav-li-auth {
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+/* SIGN IN */
+.nav-btn-signin {
+  position: relative;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #bbb;
+  text-decoration: none;
+  padding: 0.44rem 0.9rem;
+  border-radius: 3px;
+  overflow: hidden;
+  transition: color 0.25s;
+  white-space: nowrap;
+}
+.nav-btn-signin::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.06);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+  border-radius: 3px;
+}
+.nav-btn-signin::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 100%; height: 2px;
+  background: linear-gradient(90deg, #e8000d, #ff6b6b);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.nav-btn-signin:hover { color: #fff; }
+.nav-btn-signin:hover::before { transform: scaleX(1); }
+.nav-btn-signin:hover::after  { transform: scaleX(1); }
+/* REGISTER */
+.nav-btn-register {
+  position: relative;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #fff;
+  text-decoration: none;
+  padding: 0.44rem 1.1rem;
+  background: linear-gradient(135deg, #e8000d 0%, #c0000b 100%);
+  border-radius: 3px;
+  box-shadow: 0 0 12px rgba(232,0,13,0.35), inset 0 1px 0 rgba(255,255,255,0.12);
+  overflow: hidden;
+  transition: box-shadow 0.25s, transform 0.2s;
+  white-space: nowrap;
+}
+.nav-btn-register::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.22), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.5s ease;
+}
+.nav-btn-register:hover {
+  box-shadow: 0 0 22px rgba(232,0,13,0.65), 0 4px 16px rgba(232,0,13,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+  transform: translateY(-2px);
+}
+.nav-btn-register:hover::before { left: 160%; }
+/* USER DROPDOWN */
+.nav-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  padding: 0.44rem 0.9rem;
+  border: 2px solid rgba(255,255,255,0.18);
+  border-radius: 3px;
+  transition: border-color 0.2s;
+  user-select: none;
+  white-space: nowrap;
+}
+.nav-user-info:hover { border-color: var(--red); }
+.nav-chevron { font-size: 0.65rem; transition: transform 0.25s; }
+.nav-user-info.open .nav-chevron { transform: rotate(180deg); }
+.nav-user-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 200px;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-top: 3px solid var(--red);
+  border-radius: 6px;
+  padding: 0.5rem 0;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  z-index: 600;
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+.nav-user-dropdown.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.nud-item {
+  display: flex; align-items: center; gap: 0.6rem;
+  width: 100%; padding: 0.65rem 1.1rem;
+  color: #ccc; text-decoration: none;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.9rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  background: none; border: none; cursor: pointer; text-align: left;
+  transition: background 0.15s, color 0.15s;
+}
+.nud-item:hover { background: rgba(232,0,13,0.12); color: #fff; }
+.nud-signout { color: #e8000d; }
+.nud-signout:hover { background: rgba(232,0,13,0.15); color: #ff3333; }
+.nud-divider { height: 1px; background: #222; margin: 0.3rem 0; }
+</style>
+</head>
+<body>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="home.html" class="nav-logo">
+    <img src="./Images/logo.jpeg" alt="Forza Sport Logo">
+    <span>Forza Sport</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="home.html">Home</a></li>
+    <li><a href="product.html">Products</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li class="nav-divider-li"></li>
+    <li id="nav-li-guest" class="nav-li-auth">
+      <a href="login.html" class="nav-btn-signin">Sign In</a>
+    </li>
+    <li id="nav-li-register" class="nav-li-auth">
+      <a href="register.html" class="nav-btn-register">Register</a>
+    </li>
+    <li id="nav-li-user" class="nav-li-auth" style="display:none; position:relative;">
+      <div class="nav-user-info" id="nav-user-trigger">
+        <span class="nav-avatar">👤</span>
+        <span id="nav-username">User</span>
+        <span class="nav-chevron">▾</span>
+      </div>
+      <div class="nav-user-dropdown" id="nav-user-dropdown">
+        <a href="account.html" class="nud-item">👤 My Profile</a>
+        <a href="history.html" class="nud-item">📋 Order History</a>
+        <a href="cart.html"    class="nud-item">🛒 My Cart</a>
+        <div class="nud-divider"></div>
+        <button class="nud-item nud-signout" onclick="signOut()">🚪 Sign Out</button>
+      </div>
+    </li>
+  </ul>
+  <a href="cart.html" class="nav-cart-btn">
+    🛒 Cart <span class="cart-badge">0</span>
+  </a>
+</nav>
+
+<div class="history-wrapper">
+  <section class="page-header" style="text-align:left;padding:0 0 2rem;">
+    <h1>Order History</h1>
+    <p>All your past orders at a glance</p>
+  </section>
+  <div id="history-list"></div>
+</div>
+
+<footer class="footer">
+  <div class="footer-brand"><img src="Images/logo.jpg" alt="Forza Sport"><p>Sport. Style. Energy.</p></div>
+  <div class="footer-links"><h4>Quick Links</h4><ul><li><a href="home.html">Home</a></li><li><a href="product.html">Products</a></li></ul></div>
+  <div class="footer-social"><h4>Contact</h4><ul><li><a href="contact.html">Get in Touch</a></li></ul></div>
+</footer>
+<div class="footer-bottom"><p>&copy; 2026 Forza Sport E‑Store. All rights reserved.</p></div>
+
+<script src="cart.js"></script>
+<script>
+function paymentLabel(p) {
+  return p === 'cod' ? '💵 Cash on Delivery' : p === 'transfer' ? '🏦 Bank Transfer' : '💳 Credit Card';
+}
+
+// Merge locally-cached orders (this browser only) with the account's server
+// copy (works across devices, and reflects status updates made by the admin).
+// Server orders win on conflicts since they're the source of truth.
+async function loadMergedHistory() {
+  const local = getHistory();
+  let serverOrders = [];
+  try {
+    const res = await fetch('/api/orders/mine', { credentials: 'include' });
+    if (res.ok) {
+      const data = await res.json();
+      serverOrders = (data.orders || []).map(o => ({
+        orderNum: o.orderNum,
+        date: new Date(o.createdAt).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        items: o.items, subtotal: o.subtotal, shipping: o.shipping, total: o.total,
+        fulfillment: o.fulfillment, payment: o.payment, status: o.status,
+        customer: { fname: o.fname, lname: o.lname, email: o.email, phone: o.phone,
+          address: o.address, city: o.city, postcode: o.postcode }
+      }));
+    }
+  } catch (e) {
+    // not logged in, or server unreachable — fall back to local cache only
+  }
+
+  const byOrderNum = new Map();
+  local.forEach(o => byOrderNum.set(o.orderNum, o));
+  serverOrders.forEach(o => byOrderNum.set(o.orderNum, o)); // server copy wins
+
+  return Array.from(byOrderNum.values()).sort((a, b) => new Date(b.date) - new Date(a.date));
+}
+
+async function renderHistory() {
+  const history = await loadMergedHistory();
+  const container = document.getElementById('history-list');
+  if (!history.length) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <h2>📋 No Orders Yet</h2>
+        <p style="margin-bottom:1.5rem">Your completed orders will appear here.</p>
+        <a href="product.html" class="btn-red">Start Shopping</a>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = history.map((o, i) => `
+    <div class="order-card open" id="order-${i}">
+      <div class="order-header" onclick="toggleOrder(${i})">
+        <div>
+          <div class="order-num">#${o.orderNum}</div>
+          <div class="order-date">${o.date}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap;">
+          <span class="order-status status-${(o.status || 'Pending approval').toLowerCase().replace(/\s/g,'')}">${o.status || 'Pending approval'}</span>
+          <span class="order-total">LYD ${o.total.toLocaleString()}</span>
+          <span class="order-expand-icon">▼</span>
+        </div>
+      </div>
+      <div class="order-body">
+        <div class="order-meta">
+          <div class="meta-item"><label>Fulfillment</label><span>${o.fulfillment === 'pickup' ? '🏪 In-Store Pickup' : '🚚 Delivery'}</span></div>
+          <div class="meta-item"><label>Payment</label><span>${paymentLabel(o.payment)}</span></div>
+          <div class="meta-item"><label>Customer</label><span>${o.customer.fname} ${o.customer.lname}</span></div>
+          <div class="meta-item"><label>Email</label><span>${o.customer.email}</span></div>
+          <div class="meta-item"><label>Phone</label><span>${o.customer.phone}</span></div>
+          ${o.fulfillment !== 'pickup' ? `<div class="meta-item"><label>Address</label><span>${o.customer.address}, ${o.customer.city} ${o.customer.postcode}</span></div>` : ''}
+        </div>
+        <table class="items-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th style="text-align:center">Qty</th>
+              <th style="text-align:right">Unit Price</th>
+              <th style="text-align:right">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${o.items.map(item => `
+              <tr>
+                <td>
+                  <div class="item-name-cell">
+                    <div class="item-img-wrap">
+                      <img src="${getProductImage(item.name)}" alt="${item.name}" onerror="this.style.display='none'">
+                    </div>
+                    <div>
+                      <div class="item-name-text">${item.name}</div>
+                      ${item.category ? '<div class="item-cat-text">' + item.category + '</div>' : ''}
+                    </div>
+                  </div>
+                </td>
+                <td style="text-align:center;font-weight:700">${item.qty}</td>
+                <td class="td-price">LYD ${item.price.toLocaleString()}</td>
+                <td class="td-price" style="color:#e8000d">LYD ${(item.price * item.qty).toLocaleString()}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        <div class="order-totals">
+          <div class="total-row"><span>Subtotal</span><span>LYD ${o.subtotal.toLocaleString()}</span></div>
+          <div class="total-row"><span>Shipping</span><span>${o.shipping === 0 ? 'FREE' : 'LYD ' + o.shipping}</span></div>
+          <div class="total-row grand"><span>Total</span><span>LYD ${o.total.toLocaleString()}</span></div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  container.insertAdjacentHTML('beforeend', `
+    <button class="clear-history-btn" onclick="clearHistory()">🗑 Clear Order History</button>
+  `);
+}
+
+// Map product names to their image paths
+function getProductImage(name) {
+  const map = {
+    'Pro High-Top Cleats':    './Images/cleats1.jpg',
+    'Speed Low-Top Cleats':   './Images/cleats2.jpg',
+    'Goalkeeper Gloves Pro':  './Images/gloves1.jpg',
+    'Training Gloves':        './Images/gloves2.jpg',
+    'Pro Jersey':             './Images/jersey1.jpg',
+    'Training Jersey':        './Images/jersey2.jpg',
+    'Compression Shorts':     './Images/shorts1.jpg',
+    'Pro Shin Guards':        './Images/shinguards1.jpg',
+    'Forza Sport Bag':        './Images/bag1.jpg',
+    'Water Bottle Pro':       './Images/bottle1.jpg',
+  };
+  // Fuzzy match — find first key that appears in the product name
+  const key = Object.keys(map).find(k => name.toLowerCase().includes(k.toLowerCase().split(' ')[0]));
+  return key ? map[key] : './Images/logo.jpeg';
+}
+
+function toggleOrder(i) {
+  const card = document.getElementById('order-' + i);
+  card.classList.toggle('open');
+  const icon = card.querySelector('.order-expand-icon');
+  if (icon) icon.textContent = card.classList.contains('open') ? '▲' : '▼';
+}
+
+function clearHistory() {
+  if (!confirm('Remove order history from this device? If you are signed in, your orders are also kept on your account and may still appear after refreshing.')) return;
+  localStorage.removeItem('forza_history');
+  renderHistory();
+}
+
+document.addEventListener('DOMContentLoaded', renderHistory);
+</script>
+
+
+
+<script>
+(function() {
+  window.updateAuthNav = updateAuthNav;
+  function updateAuthNav() {
+    var guestEl = document.getElementById('nav-li-guest');
+    var regEl   = document.getElementById('nav-li-register');
+    var userEl  = document.getElementById('nav-li-user');
+    var nameEl  = document.getElementById('nav-username');
+    if (!guestEl) return;
+    var user = null;
+    try { user = JSON.parse(localStorage.getItem('forza_user')); } catch(e) {}
+    if (user && user.fname) {
+      guestEl.style.display = 'none';
+      if (regEl) regEl.style.display = 'none';
+      userEl.style.display = 'flex';
+      if (nameEl) nameEl.textContent = user.fname;
+    } else {
+      guestEl.style.display = 'flex';
+      if (regEl) regEl.style.display = 'flex';
+      userEl.style.display = 'none';
+    }
+  }
+  function initUserDropdown() {
+    var trigger  = document.getElementById('nav-user-trigger');
+    var dropdown = document.getElementById('nav-user-dropdown');
+    if (!trigger || !dropdown) return;
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var open = dropdown.classList.toggle('open');
+      trigger.classList.toggle('open', open);
+    });
+    document.addEventListener('click', function() {
+      dropdown.classList.remove('open');
+      if (trigger) trigger.classList.remove('open');
+    });
+    dropdown.addEventListener('click', function(e) { e.stopPropagation(); });
+  }
+  window.signOut = function() {
+    fetch('/api/logout', { method: 'POST', credentials: 'include' }).catch(function(){});
+    localStorage.removeItem('forza_user');
+    updateAuthNav();
+    var dd = document.getElementById('nav-user-dropdown');
+    if (dd) dd.classList.remove('open');
+    setTimeout(function() { location.href = 'home.html'; }, 300);
+  };
+  document.addEventListener('DOMContentLoaded', function() {
+    updateAuthNav();
+    initUserDropdown();
+  });
+})();
+</script>
+<script src="forza-i18n.js"></script>
+</body>
+</html>

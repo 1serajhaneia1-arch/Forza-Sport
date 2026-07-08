@@ -1,0 +1,892 @@
+raw
+Login · HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In – Forza Sport E‑Store</title>
+  <link rel="icon" type="image/x-icon" href="./Images/favicon.jpeg">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    * { box-sizing: border-box; }
+ 
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+ 
+    /* ── ANIMATED BACKGROUND ── */
+    .login-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      background: #0d0d0d;
+    }
+ 
+    /* Diagonal red sweep */
+    .login-bg::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -20%;
+      width: 60%;
+      height: 200%;
+      background: linear-gradient(135deg, rgba(232,0,13,0.12) 0%, transparent 60%);
+      transform: rotate(-15deg);
+    }
+ 
+    
+ 
+    /* Grid lines */
+    .login-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(232,0,13,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(232,0,13,0.05) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+ 
+    /* Floating particles */
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0;
+    }
+    
+ 
+    /* Big F watermark */
+    .bg-letter {
+      position: fixed;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 50vw;
+      color: rgba(232,0,13,0.03);
+      right: -10vw;
+      top: -10vh;
+      line-height: 1;
+      pointer-events: none;
+      z-index: 0;
+      user-select: none;
+    }
+    
+ 
+    /* ── WRAPPER ── */
+    .login-wrapper {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.5rem;
+    }
+ 
+    /* ── CARD ── */
+    .login-card {
+      width: 100%;
+      max-width: 440px;
+    }
+    
+ 
+    /* Logo + heading */
+    .login-top {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .login-logo {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      object-fit: contain;
+      border: 2px solid rgba(232,0,13,0.4);
+      box-shadow: 0 0 30px rgba(232,0,13,0.25), 0 0 60px rgba(232,0,13,0.1);
+      margin-bottom: 1rem;
+    }
+    
+    .login-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.4rem;
+      letter-spacing: 0.08em;
+      line-height: 1;
+      margin-bottom: 0.4rem;
+      background: linear-gradient(135deg, #fff 40%, #e8000d 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .login-sub {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+ 
+    /* Form panel */
+    .login-panel {
+      background: rgba(30,30,30,0.85);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 2.2rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(232,0,13,0.08) inset;
+      position: relative;
+      overflow: hidden;
+    }
+ 
+    /* Red top accent line */
+    .login-panel::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #e8000d, transparent);
+    }
+    
+ 
+    /* Input groups */
+    .input-group {
+      position: relative;
+      margin-bottom: 1.2rem;
+    }
+    .input-group label {
+      display: block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 0.45rem;
+      transition: color 0.2s;
+    }
+    .input-group:focus-within label { color: #e8000d; }
+ 
+    .input-wrap {
+      position: relative;
+    }
+    .input-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1rem;
+      pointer-events: none;
+      opacity: 0.5;
+      transition: opacity 0.2s;
+    }
+    .input-group:focus-within .input-icon { opacity: 1; }
+ 
+    .login-input {
+      width: 100%;
+      padding: 0.85rem 1rem 0.85rem 2.8rem;
+      background: rgba(255,255,255,0.05);
+      border: 1.5px solid rgba(255,255,255,0.1);
+      border-radius: 7px;
+      color: #fff;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
+    }
+    .login-input:focus {
+      border-color: #e8000d;
+      background: rgba(232,0,13,0.06);
+      box-shadow: 0 0 0 3px rgba(232,0,13,0.12);
+    }
+    .login-input::placeholder { color: #555; }
+    .login-input.error { border-color: #e8000d; }
+ 
+    /* Password toggle */
+    .pw-toggle {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #555;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: color 0.2s;
+      padding: 0;
+    }
+    .pw-toggle:hover { color: #e8000d; }
+ 
+    /* Error message */
+    .field-err {
+      font-size: 0.78rem;
+      color: #e8000d;
+      margin-top: 0.3rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      display: none;
+    }
+    .field-err.show { display: block; }
+    
+ 
+    /* Remember + Forgot */
+    .login-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+    }
+    .remember {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .remember input { accent-color: #e8000d; cursor: pointer; }
+    .forgot { color: #e8000d; text-decoration: none; font-size: 0.82rem; transition: opacity 0.2s; }
+    .forgot:hover { opacity: 0.7; text-decoration: underline; }
+ 
+    /* Submit button */
+    .login-btn {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, #e8000d, #b8000a);
+      color: #fff;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: 0.12em;
+      border: none;
+      border-radius: 7px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(232,0,13,0.35);
+    }
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(232,0,13,0.5);
+    }
+    .login-btn:active { transform: translateY(0); }
+    .login-btn:disabled { background: #333; color: #666; cursor: not-allowed; box-shadow: none; transform: none; }
+ 
+    /* Ripple on button */
+    .login-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .login-btn:hover::after { opacity: 1; }
+ 
+    /* Button loading spinner */
+    .btn-spinner {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      vertical-align: middle;
+      margin-right: 0.4rem;
+    }
+    
+ 
+    /* Divider */
+    .login-divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.5rem 0;
+      color: #333;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .login-divider::before, .login-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #2a2a2a;
+    }
+ 
+    /* Sign up link */
+    .signup-link {
+      text-align: center;
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-top: 1.2rem;
+    }
+    .signup-link a { color: #e8000d; text-decoration: none; font-weight: 700; }
+    .signup-link a:hover { text-decoration: underline; }
+ 
+    /* Success state */
+    .login-success {
+      display: none;
+      text-align: center;
+      padding: 2rem 0 1rem;
+    }
+    .success-icon {
+      font-size: 3.5rem;
+      margin-bottom: 0.8rem;
+    }
+    
+    .success-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 0.06em;
+      color: #28a745;
+      margin-bottom: 0.3rem;
+    }
+    .success-sub { font-size: 0.88rem; color: var(--muted); margin-bottom: 1.5rem; }
+    .success-btns { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
+ 
+    /* Alert error box */
+    #login-alert {
+      display: none;
+      background: rgba(232,0,13,0.1);
+      border: 1px solid rgba(232,0,13,0.4);
+      color: #ff6b6b;
+      padding: 0.8rem 1rem;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      margin-bottom: 1.2rem;
+    }
+ 
+    @media (max-width: 480px) {
+      .login-panel { padding: 1.5rem; }
+      .login-meta { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    }
+  </style>
+
+<style id="forza-nav-css">
+/* ── Divider between nav links and auth buttons ── */
+.nav-divider-li {
+  width: 1px;
+  height: 18px;
+  background: rgba(255,255,255,0.15);
+  margin: 0 0.6rem;
+  list-style: none;
+}
+.nav-li-auth {
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+/* SIGN IN */
+.nav-btn-signin {
+  position: relative;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #bbb;
+  text-decoration: none;
+  padding: 0.44rem 0.9rem;
+  border-radius: 3px;
+  overflow: hidden;
+  transition: color 0.25s;
+  white-space: nowrap;
+}
+.nav-btn-signin::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.06);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+  border-radius: 3px;
+}
+.nav-btn-signin::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 100%; height: 2px;
+  background: linear-gradient(90deg, #e8000d, #ff6b6b);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.nav-btn-signin:hover { color: #fff; }
+.nav-btn-signin:hover::before { transform: scaleX(1); }
+.nav-btn-signin:hover::after  { transform: scaleX(1); }
+/* REGISTER */
+.nav-btn-register {
+  position: relative;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #fff;
+  text-decoration: none;
+  padding: 0.44rem 1.1rem;
+  background: linear-gradient(135deg, #e8000d 0%, #c0000b 100%);
+  border-radius: 3px;
+  box-shadow: 0 0 12px rgba(232,0,13,0.35), inset 0 1px 0 rgba(255,255,255,0.12);
+  overflow: hidden;
+  transition: box-shadow 0.25s, transform 0.2s;
+  white-space: nowrap;
+}
+.nav-btn-register::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.22), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.5s ease;
+}
+.nav-btn-register:hover {
+  box-shadow: 0 0 22px rgba(232,0,13,0.65), 0 4px 16px rgba(232,0,13,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+  transform: translateY(-2px);
+}
+.nav-btn-register:hover::before { left: 160%; }
+/* USER DROPDOWN */
+.nav-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  padding: 0.44rem 0.9rem;
+  border: 2px solid rgba(255,255,255,0.18);
+  border-radius: 3px;
+  transition: border-color 0.2s;
+  user-select: none;
+  white-space: nowrap;
+}
+.nav-user-info:hover { border-color: var(--red); }
+.nav-chevron { font-size: 0.65rem; transition: transform 0.25s; }
+.nav-user-info.open .nav-chevron { transform: rotate(180deg); }
+.nav-user-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 200px;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-top: 3px solid var(--red);
+  border-radius: 6px;
+  padding: 0.5rem 0;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  z-index: 600;
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+.nav-user-dropdown.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.nud-item {
+  display: flex; align-items: center; gap: 0.6rem;
+  width: 100%; padding: 0.65rem 1.1rem;
+  color: #ccc; text-decoration: none;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.9rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  background: none; border: none; cursor: pointer; text-align: left;
+  transition: background 0.15s, color 0.15s;
+}
+.nud-item:hover { background: rgba(232,0,13,0.12); color: #fff; }
+.nud-signout { color: #e8000d; }
+.nud-signout:hover { background: rgba(232,0,13,0.15); color: #ff3333; }
+.nud-divider { height: 1px; background: #222; margin: 0.3rem 0; }
+</style>
+</head>
+<body>
+<!-- Animated background -->
+<div class="login-bg"></div>
+<div class="bg-letter">F</div>
+ 
+<!-- Navbar -->
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="home.html" class="nav-logo">
+    <img src="./Images/logo.jpeg" alt="Forza Sport Logo">
+    <span>Forza Sport</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="home.html">Home</a></li>
+    <li><a href="product.html">Products</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li class="nav-divider-li"></li>
+    <li id="nav-li-guest" class="nav-li-auth">
+      <a href="login.html" class="nav-btn-signin">Sign In</a>
+    </li>
+    <li id="nav-li-register" class="nav-li-auth">
+      <a href="register.html" class="nav-btn-register">Register</a>
+    </li>
+    <li id="nav-li-user" class="nav-li-auth" style="display:none; position:relative;">
+      <div class="nav-user-info" id="nav-user-trigger">
+        <span class="nav-avatar">👤</span>
+        <span id="nav-username">User</span>
+        <span class="nav-chevron">▾</span>
+      </div>
+      <div class="nav-user-dropdown" id="nav-user-dropdown">
+        <a href="account.html" class="nud-item">👤 My Profile</a>
+        <a href="history.html" class="nud-item">📋 Order History</a>
+        <a href="cart.html"    class="nud-item">🛒 My Cart</a>
+        <div class="nud-divider"></div>
+        <button class="nud-item nud-signout" onclick="signOut()">🚪 Sign Out</button>
+      </div>
+    </li>
+  </ul>
+  <a href="cart.html" class="nav-cart-btn">
+    🛒 Cart <span class="cart-badge">0</span>
+  </a>
+</nav>
+ 
+<div class="login-wrapper">
+  <div class="login-card">
+ 
+    <div class="login-top">
+      <img src="./Images/logo.jpeg" alt="Forza Sport" class="login-logo">
+      <h1 class="login-title">Welcome Back</h1>
+      <p class="login-sub">Sign in to your Forza Sport account</p>
+    </div>
+ 
+    <div class="login-panel">
+ 
+      <!-- Alert box -->
+      <div id="login-alert"></div>
+ 
+      <!-- Login form -->
+      <div id="login-form-wrap">
+        <div class="input-group">
+          <label for="email">Email Address</label>
+          <div class="input-wrap">
+            <span class="input-icon">✉️</span>
+            <input class="login-input" type="email" id="email" placeholder="you@example.com" autocomplete="email">
+          </div>
+          <p class="field-err" id="email-err">Please enter a valid email</p>
+        </div>
+ 
+        <div class="input-group">
+          <label for="password">Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input class="login-input" type="password" id="password" placeholder="Your password" autocomplete="current-password">
+            <button class="pw-toggle" type="button" onclick="togglePw()" id="pw-eye">👁</button>
+          </div>
+          <p class="field-err" id="pw-err">Password is required</p>
+        </div>
+ 
+        <div class="login-meta">
+          <label class="remember">
+            <input type="checkbox" id="remember" checked>
+            Remember me
+          </label>
+          <a href="#" class="forgot" onclick="openForgot(event)">Forgot password?</a>
+        </div>
+ 
+        <button class="login-btn" id="login-btn" onclick="doLogin()">
+          Sign In →
+        </button>
+ 
+        <div class="login-divider">or</div>
+ 
+        <p class="signup-link">
+          Don't have an account? <a href="register.html">Create one free →</a>
+        </p>
+      </div>
+ 
+      <!-- Success state -->
+      <div class="login-success" id="login-success">
+        <div class="success-icon">✅</div>
+        <p class="success-name" id="success-name">Welcome back!</p>
+        <p class="success-sub" id="success-sub">You're now signed in.</p>
+        <div class="success-btns">
+          <a href="product.html" class="btn-red">🛒 Shop Now</a>
+          <a href="account.html" style="padding:0.75rem 1.4rem;border:1px solid #333;border-radius:4px;color:var(--muted);text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;font-size:0.9rem;">👤 My Account</a>
+        </div>
+      </div>
+ 
+    </div>
+  </div>
+</div>
+ 
+<!-- Footer -->
+<footer class="footer" style="position:relative;z-index:1">
+  <div class="footer-brand">
+    <img src="./Images/logo.jpeg" alt="Forza Sport">
+    <p>Sport. Style. Energy. — Your premium online sports store in Libya.</p>
+  </div>
+  <div class="footer-links">
+    <h4>Quick Links</h4>
+    <ul>
+      <li><a href="home.html">Home</a></li>
+      <li><a href="product.html">Products</a></li>
+      <li><a href="cart.html">Cart</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </div>
+  <div class="footer-social">
+    <h4>Contact</h4>
+    <ul>
+      <li><a href="mailto:seraj.haneia@gmail.com">seraj.haneia@gmail.com</a></li>
+      <li><a href="#">📍 Benghazi, Libya</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom" style="position:relative;z-index:1">
+  <p>&copy; 2026 Forza Sport E‑Store. All rights reserved.</p>
+</div>
+ 
+<script src="cart.js"></script>
+<script>
+  // ── Floating particles ──
+  const bg = document.querySelector('.login-bg');
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 4 + 2;
+    p.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}%;
+      background:${Math.random()>0.5?'rgba(232,0,13,0.5)':'rgba(255,255,255,0.15)'};{Math.random()*10+8}s;{Math.random()*8}s;
+    `;
+    bg.appendChild(p);
+  }
+ 
+  // ── Toggle password visibility ──
+  let pwVisible = false;
+  function togglePw() {
+    pwVisible = !pwVisible;
+    document.getElementById('password').type = pwVisible ? 'text' : 'password';
+    document.getElementById('pw-eye').textContent = pwVisible ? '🙈' : '👁';
+  }
+ 
+  // ── Enter key support ──
+  document.getElementById('email').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('password').focus(); });
+  document.getElementById('password').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+ 
+  // ── Login ──
+  async function doLogin() {
+    const email    = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const btn      = document.getElementById('login-btn');
+    const alert    = document.getElementById('login-alert');
+ 
+    // Clear errors
+    alert.style.display = 'none';
+    document.getElementById('email-err').classList.remove('show');
+    document.getElementById('pw-err').classList.remove('show');
+    document.getElementById('email').classList.remove('error');
+    document.getElementById('password').classList.remove('error');
+ 
+    // Validate
+    let valid = true;
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      document.getElementById('email-err').classList.add('show');
+      document.getElementById('email').classList.add('error');
+      valid = false;
+    }
+    if (!password) {
+      document.getElementById('pw-err').classList.add('show');
+      document.getElementById('password').classList.add('error');
+      valid = false;
+    }
+    if (!valid) return;
+ 
+    // Loading state
+    btn.disabled = true;
+    btn.innerHTML = '<span class="btn-spinner"></span>Signing In…';
+ 
+    try {
+      const result = await authenticateUser(email, password);
+
+      if (result.ok) {
+        // Save user to localStorage
+        saveUser(result.user);
+ 
+        // Show success
+        document.getElementById('login-form-wrap').style.display = 'none';
+        const s = document.getElementById('login-success');
+        s.style.display = 'block';
+        document.getElementById('success-name').textContent = `Welcome back, ${result.user.fname}! 🎉`;
+        document.getElementById('success-sub').textContent  = `Signed in as ${result.user.email}`;
+ 
+        // Auto-redirect after 2s if remember me unchecked
+        if (!document.getElementById('remember').checked) {
+          setTimeout(() => { location.href = 'product.html'; }, 2000);
+        }
+      } else {
+        alert.textContent  = result.message || 'Sign in failed. Please try again.';
+        alert.style.display = 'block';
+        document.getElementById('password').classList.add('error');
+        btn.disabled = false;
+        btn.innerHTML = 'Sign In →';
+      }
+    } catch (err) {
+      alert.textContent = 'Something went wrong. Please try again.';
+      alert.style.display = 'block';
+      btn.disabled = false;
+      btn.innerHTML = 'Sign In →';
+    }
+  }
+</script>
+
+
+
+<script>
+(function() {
+  window.updateAuthNav = updateAuthNav;
+  function updateAuthNav() {
+    var guestEl = document.getElementById('nav-li-guest');
+    var regEl   = document.getElementById('nav-li-register');
+    var userEl  = document.getElementById('nav-li-user');
+    var nameEl  = document.getElementById('nav-username');
+    if (!guestEl) return;
+    var user = null;
+    try { user = JSON.parse(localStorage.getItem('forza_user')); } catch(e) {}
+    if (user && user.fname) {
+      guestEl.style.display = 'none';
+      if (regEl) regEl.style.display = 'none';
+      userEl.style.display = 'flex';
+      if (nameEl) nameEl.textContent = user.fname;
+    } else {
+      guestEl.style.display = 'flex';
+      if (regEl) regEl.style.display = 'flex';
+      userEl.style.display = 'none';
+    }
+  }
+  function initUserDropdown() {
+    var trigger  = document.getElementById('nav-user-trigger');
+    var dropdown = document.getElementById('nav-user-dropdown');
+    if (!trigger || !dropdown) return;
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var open = dropdown.classList.toggle('open');
+      trigger.classList.toggle('open', open);
+    });
+    document.addEventListener('click', function() {
+      dropdown.classList.remove('open');
+      if (trigger) trigger.classList.remove('open');
+    });
+    dropdown.addEventListener('click', function(e) { e.stopPropagation(); });
+  }
+  window.signOut = function() {
+    fetch('/api/logout', { method: 'POST', credentials: 'include' }).catch(function(){});
+    localStorage.removeItem('forza_user');
+    updateAuthNav();
+    var dd = document.getElementById('nav-user-dropdown');
+    if (dd) dd.classList.remove('open');
+    setTimeout(function() { location.href = 'home.html'; }, 300);
+  };
+  document.addEventListener('DOMContentLoaded', function() {
+    updateAuthNav();
+    initUserDropdown();
+  });
+})();
+</script>
+<!-- ── FORGOT PASSWORD MODAL ── -->
+<div id="forgot-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9000;align-items:center;justify-content:center;">
+  <div style="background:#111;border:1px solid #2a2a2a;border-top:3px solid #e8000d;border-radius:10px;padding:2rem;max-width:400px;width:90%;position:relative;">
+    <button onclick="closeForgot()" style="position:absolute;top:0.8rem;right:1rem;background:none;border:none;color:#666;font-size:1.3rem;cursor:pointer;line-height:1">✕</button>
+    <h3 style="color:#fff;margin:0 0 0.4rem;font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:0.06em">Forgot Password?</h3>
+    <p style="color:#888;font-size:0.88rem;margin-bottom:1.2rem">Enter your email and the admin will be notified to help you reset your password.</p>
+    <div id="forgot-alert" style="display:none;background:rgba(232,0,13,0.12);border:1px solid #e8000d;border-radius:4px;padding:0.7rem 1rem;color:#ff6b6b;font-size:0.85rem;margin-bottom:1rem"></div>
+    <div id="forgot-success" style="display:none;background:rgba(40,167,69,0.12);border:1px solid #28a745;border-radius:4px;padding:0.7rem 1rem;color:#4caf76;font-size:0.9rem;margin-bottom:1rem"></div>
+    <input id="forgot-email" type="email" placeholder="your@email.com"
+      style="width:100%;padding:0.75rem 1rem;background:#1a1a1a;border:1px solid #333;border-radius:4px;color:#fff;font-size:0.95rem;margin-bottom:1rem;outline:none;">
+    <button onclick="doForgot()"
+      style="width:100%;padding:0.8rem;background:#e8000d;color:#fff;border:none;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;cursor:pointer;transition:background 0.2s;"
+      id="forgot-btn">Send Reset Request →</button>
+  </div>
+</div>
+
+<style>
+  /* Verification banner */
+  .verify-banner {
+    display:none; position:fixed; top:80px; left:50%; transform:translateX(-50%);
+    z-index:8000; padding:0.8rem 1.6rem; border-radius:6px; font-size:0.9rem;
+    font-weight:600; text-align:center; box-shadow:0 8px 30px rgba(0,0,0,0.5);
+  }
+  
+  .verify-banner.ok  { background:#0d2e17; border:1px solid #28a745; color:#4caf76; }
+  .verify-banner.err { background:#2e0d0d; border:1px solid #e8000d; color:#ff6b6b; }
+</style>
+<div id="verify-banner" class="verify-banner"></div>
+
+<script>
+// ── Verification banner on page load ──
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const v = params.get('verified');
+  const banner = document.getElementById('verify-banner');
+  if (v === 'ok') {
+    banner.className = 'verify-banner ok';
+    banner.textContent = '✅ Email verified! You can now sign in.';
+    banner.style.display = 'block';
+    setTimeout(() => banner.style.display = 'none', 5000);
+  } else if (v === 'fail') {
+    banner.className = 'verify-banner err';
+    banner.textContent = '❌ Verification link is invalid or expired. Please register again.';
+    banner.style.display = 'block';
+    setTimeout(() => banner.style.display = 'none', 6000);
+  }
+})();
+
+// ── Forgot password modal ──
+function openForgot(e) {
+  e.preventDefault();
+  const em = document.getElementById('email').value.trim();
+  if (em) document.getElementById('forgot-email').value = em;
+  document.getElementById('forgot-overlay').style.display = 'flex';
+  document.getElementById('forgot-alert').style.display = 'none';
+  document.getElementById('forgot-success').style.display = 'none';
+}
+function closeForgot() {
+  document.getElementById('forgot-overlay').style.display = 'none';
+}
+document.getElementById('forgot-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeForgot();
+});
+
+async function doForgot() {
+  const email = document.getElementById('forgot-email').value.trim();
+  const alertEl = document.getElementById('forgot-alert');
+  const successEl = document.getElementById('forgot-success');
+  const btn = document.getElementById('forgot-btn');
+  alertEl.style.display = 'none';
+  successEl.style.display = 'none';
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    alertEl.textContent = 'Please enter a valid email address.';
+    alertEl.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Checking…';
+  try {
+    // Always show the same generic message regardless of whether the email
+    // is registered — this avoids leaking which emails have accounts, and
+    // fixes a bug where this used to call a non-existent getUsers() function.
+    successEl.textContent =
+      'If an account exists with that email, the store owner will be notified to help reset your password. For now, please contact us directly.';
+    successEl.style.display = 'block';
+    btn.style.display = 'none';
+  } catch (err) {
+    alertEl.textContent = 'Something went wrong. Please try again.';
+    alertEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Send Reset Request →';
+  }
+}
+</script>
+<script src="forza-i18n.js"></script>
+</body>
+</html>
