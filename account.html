@@ -289,19 +289,8 @@
         <input type="text" id="address" placeholder="House no. / Street">
       </div>
       <div class="form-group">
-        <label for="city">City / District</label>
+        <label for="city">City</label>
         <input type="text" id="city" placeholder="Benghazi">
-      </div>
-      <div class="form-group">
-        <label for="province">Province</label>
-        <select id="province">
-          <option>Benghazi</option>
-          <option>Tripoli</option>
-          <option>Misrata</option>
-          <option>Tobruk</option>
-          <option>Sebha</option>
-          <option>Other</option>
-        </select>
       </div>
 
       <button class="save-btn" onclick="saveProfile()">💾 Save Profile</button>
@@ -332,7 +321,6 @@ function loadProfile() {
   f('fname', user.fname); f('lname', user.lname);
   f('email', user.email); f('phone', user.phone);
   f('address', user.address); f('city', user.city);
-  f('province', user.province);
   updateBanner(user);
 }
 
@@ -352,7 +340,6 @@ function saveProfile() {
     phone: document.getElementById('phone').value.trim(),
     address: document.getElementById('address').value.trim(),
     city: document.getElementById('city').value.trim(),
-    province: document.getElementById('province').value,
   };
   saveUser(user);
   updateBanner(user);

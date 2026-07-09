@@ -214,7 +214,7 @@ const COOKIE_OPTS = {
 };
 
 function issueSession(res, user) {
-  const token = jwt.sign({ email: user.email }, JWT_SECRET, { expiresIn: '7d' });
+  const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '7d' });
   res.cookie(SESSION_COOKIE, token, COOKIE_OPTS);
 }
 
@@ -224,7 +224,7 @@ function requireSession(req, res) {
   try {
     const payload = jwt.verify(token, JWT_SECRET);
     const users = readUsers();
-    const user = users.find(u => u.email.toLowerCase() === payload.email.toLowerCase());
+    const user = users.find(u => u.id === payload.id);
     if (!user) { res.status(401).json({ message: 'Session no longer valid' }); return null; }
     return user;
   } catch (e) {
@@ -236,6 +236,30 @@ function requireSession(req, res) {
 // ===== MIDDLEWARE =====
 app.use(express.json());
 app.use(cookieParser());
+
+// ---- MANDATORY SIGN-IN GATE ----
+// Any *.html page (or "/") requires a valid session cookie, except the
+// pages needed to actually sign in/register, and the admin dashboard
+// (which already has its own separate ADMIN_KEY-based auth).
+const PUBLIC_PAGES = new Set(['/login.html', '/register.html']);
+app.use((req, res, next) => {
+  const isPage = req.path === '/' || req.path.endsWith('.html');
+  if (!isPage) return next(); // let CSS/JS/images/API routes through untouched
+  if (PUBLIC_PAGES.has(req.path)) return next();
+  if (req.path.startsWith('/dashboard')) return next(); // separate admin-key auth
+
+  const token = req.cookies && req.cookies[SESSION_COOKIE];
+  if (!token) {
+    return res.redirect('/login.html?next=' + encodeURIComponent(req.path));
+  }
+  try {
+    jwt.verify(token, JWT_SECRET);
+    return next();
+  } catch (e) {
+    return res.redirect('/login.html?next=' + encodeURIComponent(req.path));
+  }
+});
+
 app.use(express.static(__dirname)); // serves dashboard.html, home.html, Images/, etc.
 
 // Root URL should load the storefront home page instead of 404ing
@@ -266,30 +290,32 @@ const upload = multer({
 
 // ---- AUTH ----
 app.post('/api/register', async (req, res) => {
-  const { fname, lname, email, phone, password, address, city, postcode, province } = req.body || {};
-  if (!fname || !lname || !email || !phone || !password) {
+  const { fname, lname, email, phone, password, address, city } = req.body || {};
+  if (!fname || !lname || !phone || !password) {
     return res.status(400).json({ message: 'Missing required fields.' });
   }
   if (password.length < 8) {
     return res.status(400).json({ message: 'Password must be at least 8 characters.' });
   }
-  const emailLc = String(email).trim().toLowerCase();
+  const emailLc = email ? String(email).trim().toLowerCase() : '';
+  const phoneTrim = String(phone).trim();
   const users = readUsers();
-  if (users.some(u => u.email.toLowerCase() === emailLc)) {
+  if (emailLc && users.some(u => u.email && u.email.toLowerCase() === emailLc)) {
     return res.status(409).json({ message: 'An account with this email already exists.' });
+  }
+  if (users.some(u => u.phone === phoneTrim)) {
+    return res.status(409).json({ message: 'An account with this phone number already exists.' });
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
   const user = {
     id: Date.now(),
     fname, lname,
-    email,
-    phone,
+    email: email || '',
+    phone: phoneTrim,
     passwordHash,
     address: address || '',
     city: city || '',
-    postcode: postcode || '',
-    province: province || '',
     createdAt: new Date().toISOString()
   };
   users.push(user);
@@ -300,14 +326,19 @@ app.post('/api/register', async (req, res) => {
 });
 
 app.post('/api/login', async (req, res) => {
+  // "email" field accepts either an email address or a phone number,
+  // since email is now optional at signup and phone is always required.
   const { email, password } = req.body || {};
   if (!email || !password) {
-    return res.status(400).json({ message: 'Email and password are required.' });
+    return res.status(400).json({ message: 'Email or phone, and password, are required.' });
   }
-  const emailLc = String(email).trim().toLowerCase();
+  const identifier = String(email).trim().toLowerCase();
   const users = readUsers();
-  const user = users.find(u => u.email.toLowerCase() === emailLc);
-  if (!user) return res.status(401).json({ message: 'No account found with this email.' });
+  const user = users.find(u =>
+    (u.email && u.email.toLowerCase() === identifier) ||
+    (u.phone && u.phone.toLowerCase() === identifier)
+  );
+  if (!user) return res.status(401).json({ message: 'No account found with that email or phone number.' });
 
   const match = await bcrypt.compare(password, user.passwordHash);
   if (!match) return res.status(401).json({ message: 'Incorrect password. Please try again.' });

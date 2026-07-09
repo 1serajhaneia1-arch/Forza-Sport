@@ -3,184 +3,72 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register – Forza Sport E‑Store</title>
+  <title>My Account – Forza Sport E‑Store</title>
   
   <link rel="icon" type="image/x-icon" href="./Images/favicon.jpeg">
   <link rel="stylesheet" href="style.css">
   <style>
-    body {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
     body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(232,0,13,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(232,0,13,0.04) 1px, transparent 1px);
-      background-size: 60px 60px;
-      z-index: 0;
-      pointer-events: none;
+      content: ''; position: fixed; inset: 0;
+      background-image: linear-gradient(rgba(232,0,13,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(232,0,13,0.03) 1px, transparent 1px);
+      background-size: 60px 60px; z-index: 0; pointer-events: none;
     }
-    .reg-wrapper {
-      position: relative;
-      z-index: 1;
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 3rem 1.5rem;
-    }
-    .reg-card {
-      background: var(--dark3);
-      border: 1px solid #252525;
-      border-radius: 10px;
-      max-width: 520px;
-      width: 100%;
-      overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-    }
-    .reg-banner {
-      background: linear-gradient(135deg, var(--red) 0%, #7b0008 100%);
+    .account-wrapper { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+    .account-card { background: var(--dark3); border: 1px solid #252525; border-radius: 8px; overflow: hidden; }
+    .account-banner {
+      background: linear-gradient(135deg, #1a0002 0%, #2d0004 100%);
+      border-bottom: 1px solid #2e2e2e;
       padding: 2rem;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
+      display: flex; align-items: center; gap: 1.5rem;
     }
-    .reg-banner::before {
-      content: 'F';
-      position: absolute;
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 12rem;
-      color: rgba(255,255,255,0.06);
-      top: -30px;
-      right: -20px;
-      line-height: 1;
+    .account-avatar {
+      width: 70px; height: 70px; border-radius: 50%;
+      background: var(--red); display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; font-family: 'Bebas Neue', sans-serif; flex-shrink: 0;
     }
-    .reg-banner img {
-      width: 70px;
-      height: 70px;
-      object-fit: contain;
-      border-radius: 50%;
-      margin-bottom: 0.8rem;
-      position: relative;
+    .account-banner-text h2 { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 0.06em; margin-bottom: 0.2rem; }
+    .account-banner-text p { font-size: 0.85rem; color: var(--muted); }
+    .account-form { padding: 2rem; }
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 0.08em;
+      color: var(--red); margin-bottom: 1.2rem; padding-bottom: 0.6rem; border-bottom: 1px solid #2a2a2a;
     }
-    .reg-banner h1 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.8rem;
-      letter-spacing: 0.08em;
-      margin-bottom: 0.3rem;
-      position: relative;
-    }
-    .reg-banner p {
-      font-size: 0.85rem;
-      opacity: 0.85;
-      position: relative;
-    }
-    .reg-form-area { padding: 2rem; }
- 
-    #success-msg {
-      display: none;
-      background: rgba(40,167,69,0.12);
-      border: 1px solid #28a745;
-      color: #5eda79;
-      padding: 1rem;
-      border-radius: 6px;
-      text-align: center;
-      font-size: 0.9rem;
-      margin-bottom: 1.2rem;
-    }
-    
- 
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.8rem;
-    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
     .form-group { margin-bottom: 1rem; }
-    label {
-      display: block;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.78rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-      margin-bottom: 0.4rem;
-    }
-    input[type="text"],
-    input[type="email"],
-    input[type="password"],
-    input[type="tel"],
-    select {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      background: var(--dark4);
-      border: 1.5px solid #333;
-      border-radius: 5px;
-      color: #fff;
-      font-family: 'Barlow', sans-serif;
-      font-size: 0.9rem;
-      outline: none;
-      transition: border-color 0.2s;
+    label { display: block; font-family: 'Barlow Condensed', sans-serif; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.4rem; }
+    input[type="text"], input[type="email"], input[type="tel"], select {
+      width: 100%; padding: 0.75rem 1rem; background: var(--dark4); border: 1.5px solid #333;
+      border-radius: 5px; color: #fff; font-family: 'Barlow', sans-serif; font-size: 0.9rem;
+      outline: none; transition: border-color 0.2s; box-sizing: border-box;
     }
     input:focus, select:focus { border-color: var(--red); }
-    input::placeholder { color: #555; }
-    .input-error { border-color: #e8000d !important; }
-    .err-msg { font-size: 0.78rem; color: var(--red); margin-top: 0.3rem; display: none; }
-    .err-msg.show { display: block; }
- 
-    .divider { border: none; border-top: 1px solid #2a2a2a; margin: 1.2rem 0; }
- 
-    .submit-btn {
-      width: 100%;
-      padding: 0.9rem;
-      background: var(--red);
-      color: #fff;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.05rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.15s;
+    select option { background: var(--dark4); }
+    .save-btn {
+      width: 100%; padding: 0.85rem; background: var(--red); color: #fff;
+      font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em; border: none; border-radius: 4px;
+      cursor: pointer; transition: background 0.2s; margin-top: 0.5rem;
     }
-    .submit-btn:hover { background: var(--red2); transform: translateY(-2px); }
- 
-    .reset-btn {
-      width: 100%;
-      padding: 0.75rem;
-      background: transparent;
-      color: var(--muted);
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      border: 1.5px solid #333;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-top: 0.6rem;
-      transition: border-color 0.2s, color 0.2s;
+    .save-btn:hover { background: var(--red2); }
+    .clear-btn {
+      width: 100%; padding: 0.65rem; background: transparent; color: #555;
+      font-family: 'Barlow Condensed', sans-serif; font-size: 0.85rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em; border: 1px solid #333;
+      border-radius: 4px; cursor: pointer; transition: all 0.2s; margin-top: 0.6rem;
     }
-    .reset-btn:hover { border-color: #555; color: #fff; }
- 
-    .signin-note {
-      text-align: center;
-      font-size: 0.85rem;
-      color: var(--muted);
-      margin-top: 1.2rem;
+    .clear-btn:hover { border-color: var(--red); color: var(--red); }
+    .quick-links { display: flex; gap: 0.8rem; margin-top: 1.5rem; flex-wrap: wrap; }
+    .ql-btn {
+      flex: 1; min-width: 130px; padding: 0.75rem; background: var(--dark4);
+      border: 1px solid #333; border-radius: 6px; color: var(--muted);
+      font-family: 'Barlow Condensed', sans-serif; font-size: 0.88rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.06em; text-align: center;
+      text-decoration: none; transition: all 0.2s; cursor: pointer;
     }
-    .signin-note a { color: var(--red); text-decoration: none; font-weight: 600; }
-    .signin-note a:hover { text-decoration: underline; }
- 
-    @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+    .ql-btn:hover { border-color: var(--red); color: #fff; }
+    @media (max-width: 580px) { .form-row { grid-template-columns: 1fr; } }
   </style>
- 
+
 <style id="forza-nav-css">
 /* ── Divider between nav links and auth buttons ── */
 .nav-divider-li {
@@ -359,182 +247,121 @@
     🛒 Cart <span class="cart-badge">0</span>
   </a>
 </nav>
- 
-<div class="reg-wrapper">
-  <div class="reg-card">
-    <div class="reg-banner">
-      <img src="./Images/logo.jpeg" alt="Forza Sport">
-      <h1>Create Account</h1>
-      <p>Join Forza Sport and unlock exclusive member deals</p>
+
+<div class="account-wrapper">
+  <section class="page-header" style="text-align:left;padding:0 0 2rem;">
+    <h1>My Account</h1>
+    <p>Manage your profile and preferences</p>
+  </section>
+
+  <div class="account-card">
+    <div class="account-banner">
+      <div class="account-avatar" id="avatar-initials">?</div>
+      <div class="account-banner-text">
+        <h2 id="banner-name">Guest</h2>
+        <p id="banner-email">No email saved</p>
+      </div>
     </div>
-    <div class="reg-form-area">
-      <div id="success-msg">🎉 Account created! Welcome to Forza Sport!</div>
- 
-      <form id="reg-form" novalidate>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="fname">First Name *</label>
-            <input type="text" id="fname" placeholder="First name" required>
-            <p class="err-msg" id="fname-err">Required</p>
-          </div>
-          <div class="form-group">
-            <label for="lname">Last Name *</label>
-            <input type="text" id="lname" placeholder="Last name" required>
-            <p class="err-msg" id="lname-err">Required</p>
-          </div>
-        </div>
- 
+    <div class="account-form">
+      <p class="section-title">Personal Information</p>
+      <div class="form-row">
         <div class="form-group">
-          <label for="email">Email Address *</label>
-          <input type="email" id="email" placeholder="you@example.com" required>
-          <p class="err-msg" id="email-err">Enter a valid email</p>
+          <label for="fname">First Name</label>
+          <input type="text" id="fname" placeholder="First name">
         </div>
- 
         <div class="form-group">
-          <label for="phone">Phone Number *</label>
-          <input type="tel" id="phone" placeholder="0912345678" pattern="[0-9]{10}" required>
-          <p class="err-msg" id="phone-err">Enter 10-digit phone number</p>
+          <label for="lname">Last Name</label>
+          <input type="text" id="lname" placeholder="Last name">
         </div>
- 
-        <div class="form-row">
-          <div class="form-group">
-            <label for="password">Password *</label>
-            <input type="password" id="password" placeholder="Min. 8 characters" required>
-            <p class="err-msg" id="pw-err">Minimum 8 characters</p>
-          </div>
-          <div class="form-group">
-            <label for="confirm-pw">Confirm Password *</label>
-            <input type="password" id="confirm-pw" placeholder="Repeat password" required>
-            <p class="err-msg" id="cpw-err">Passwords do not match</p>
-          </div>
-        </div>
- 
-        <hr class="divider">
- 
-        <div class="form-group">
-          <label for="address">Delivery Address *</label>
-          <input type="text" id="address" placeholder="House no., Street, District" required>
-          <p class="err-msg" id="address-err">Please enter your delivery address</p>
-        </div>
- 
-        <div class="form-group">
-          <label for="city">City / Province *</label>
-          <input type="text" id="city" placeholder="e.g. Benghazi" required>
-          <p class="err-msg" id="city-err">Required</p>
-        </div>
- 
-        <button type="submit" class="submit-btn">Create Account</button>
-        <button type="reset" class="reset-btn">Clear Form</button>
- 
-        <p class="signin-note">Already have an account? <a href="#">Sign in here</a></p>
-      </form>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="you@example.com">
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" placeholder="0912345678">
+      </div>
+
+      <p class="section-title" style="margin-top:1.5rem;">Default Shipping Address</p>
+      <div class="form-group">
+        <label for="address">Street Address</label>
+        <input type="text" id="address" placeholder="House no. / Street">
+      </div>
+      <div class="form-group">
+        <label for="city">City</label>
+        <input type="text" id="city" placeholder="Benghazi">
+      </div>
+
+      <button class="save-btn" onclick="saveProfile()">💾 Save Profile</button>
+      <button class="clear-btn" onclick="clearProfile()">Clear Saved Data</button>
+
+      <div class="quick-links">
+        <a href="history.html" class="ql-btn">📋 Order History</a>
+        <a href="cart.html" class="ql-btn">🛒 View Cart</a>
+        <a href="product.html" class="ql-btn">🛍 Shop Now</a>
+      </div>
     </div>
   </div>
 </div>
- 
-<!-- FOOTER -->
-<footer class="footer" style="position:relative;z-index:1">
-  <div class="footer-brand">
-    <img src="./Images/logo.jpeg" alt="Forza Sport">
-    <p>Sport. Style. Energy. — Your premium online sports store in Libya.</p>
-  </div>
-  <div class="footer-links">
-    <h4>Quick Links</h4>
-    <ul>
-      <li><a href="home.html">Home</a></li>
-      <li><a href="product.html">Products</a></li>
-      <li><a href="cart.html">Cart</a></li>
-      <li><a href="contact.html">Contact</a></li>
-    </ul>
-  </div>
-  <div class="footer-social">
-    <h4>Contact</h4>
-    <ul>
-      <li><a href="mailto:seraj.haneia@gmail.com">seraj.haneia@gmail.com</a></li>
-      <li><a href="#">📍 Benghazi, Libya</a></li>
-    </ul>
-  </div>
+
+<footer class="footer">
+  <div class="footer-brand"><img src="./Images/logo.jpeg" alt="Forza Sport"><p>Sport. Style. Energy.</p></div>
+  <div class="footer-links"><h4>Quick Links</h4><ul><li><a href="home.html">Home</a></li><li><a href="product.html">Products</a></li></ul></div>
+  <div class="footer-social"><h4>Contact</h4><ul><li><a href="contact.html">Get in Touch</a></li></ul></div>
 </footer>
-<div class="footer-bottom" style="position:relative;z-index:1">
-  <p>&copy; 2026 Forza Sport E‑Store. All rights reserved.</p>
-</div>
- 
+<div class="footer-bottom"><p>&copy; 2026 Forza Sport E‑Store. All rights reserved.</p></div>
+
 <script src="cart.js"></script>
 <script>
-const form = document.getElementById('reg-form');
- 
-function setErr(id, show) {
-  document.getElementById(id).classList.toggle('show', show);
+function loadProfile() {
+  const user = getUser();
+  if (!user) return;
+  const f = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
+  f('fname', user.fname); f('lname', user.lname);
+  f('email', user.email); f('phone', user.phone);
+  f('address', user.address); f('city', user.city);
+  updateBanner(user);
 }
-function setInvalid(id, invalid) {
-  document.getElementById(id).classList.toggle('input-error', invalid);
+
+function updateBanner(user) {
+  if (!user) return;
+  const initials = ((user.fname||'?')[0] + (user.lname||'')[0]).toUpperCase();
+  document.getElementById('avatar-initials').textContent = initials || '?';
+  document.getElementById('banner-name').textContent = [user.fname, user.lname].filter(Boolean).join(' ') || 'Guest';
+  document.getElementById('banner-email').textContent = user.email || 'No email saved';
 }
- 
-form.addEventListener('submit', async function(e) {
-  e.preventDefault();
-  let valid = true;
- 
-  const fname    = document.getElementById('fname').value.trim();
-  const lname    = document.getElementById('lname').value.trim();
-  const email    = document.getElementById('email').value.trim();
-  const phone    = document.getElementById('phone').value.trim();
-  const pw       = document.getElementById('password').value;
-  const cpw      = document.getElementById('confirm-pw').value;
-  const address  = document.getElementById('address').value.trim();
-  const city     = document.getElementById('city').value.trim();
-  // Validate
-  [['fname','fname-err',!fname],['lname','lname-err',!lname]].forEach(([fid,eid,err]) => {
-    setErr(eid, err); setInvalid(fid, err); if (err) valid = false;
+
+function saveProfile() {
+  const user = {
+    fname: document.getElementById('fname').value.trim(),
+    lname: document.getElementById('lname').value.trim(),
+    email: document.getElementById('email').value.trim(),
+    phone: document.getElementById('phone').value.trim(),
+    address: document.getElementById('address').value.trim(),
+    city: document.getElementById('city').value.trim(),
+  };
+  saveUser(user);
+  updateBanner(user);
+  showToast('✓ Profile saved!');
+}
+
+function clearProfile() {
+  localStorage.removeItem('forza_user');
+  ['fname','lname','email','phone','address','city'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
   });
-  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  setErr('email-err', !emailOk); setInvalid('email', !emailOk); if (!emailOk) valid = false;
-  const phoneOk = /^[0-9]{10}$/.test(phone);
-  setErr('phone-err', !phoneOk); setInvalid('phone', !phoneOk); if (!phoneOk) valid = false;
-  const pwOk = pw.length >= 8;
-  setErr('pw-err', !pwOk); setInvalid('password', !pwOk); if (!pwOk) valid = false;
-  const cpwOk = pw === cpw;
-  setErr('cpw-err', !cpwOk); setInvalid('confirm-pw', !cpwOk); if (!cpwOk) valid = false;
-  [['address','address-err',!address],['city','city-err',!city]].forEach(([fid,eid,err]) => {
-    setErr(eid,err); setInvalid(fid,err); if(err) valid=false;
-  });
- 
-  if (!valid) return;
- 
-  const submitBtn = form.querySelector('.submit-btn');
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'Creating Account…';
- 
-  try {
-    const result = await registerUser({ fname, lname, email, phone, password: pw, address, city });
- 
-    if (result.ok) {
-      saveUser(result.user);
-      document.getElementById('success-msg').style.display = 'block';
-      form.reset();
-      document.getElementById('success-msg').scrollIntoView({ behavior: 'smooth', block: 'center' });
-      setTimeout(() => { location.href = 'product.html'; }, 1500);
-    } else {
-      alert(result.message || 'Registration failed. Please try again.');
-    }
-  } catch (err) {
-    alert('Something went wrong creating your account. Please try again.');
-  }
- 
-  submitBtn.disabled = false;
-  submitBtn.textContent = 'Create Account';
-});
- 
-form.addEventListener('reset', () => {
-  setTimeout(() => {
-    document.getElementById('success-msg').style.display = 'none';
-    document.querySelectorAll('.err-msg').forEach(e => e.classList.remove('show'));
-    document.querySelectorAll('.input-error').forEach(e => e.classList.remove('input-error'));
-  }, 10);
-});
+  document.getElementById('avatar-initials').textContent = '?';
+  document.getElementById('banner-name').textContent = 'Guest';
+  document.getElementById('banner-email').textContent = 'No email saved';
+  showToast('Profile cleared.');
+}
+
+document.addEventListener('DOMContentLoaded', loadProfile);
 </script>
- 
- 
- 
+
+
+
 <script>
 (function() {
   window.updateAuthNav = updateAuthNav;
@@ -589,4 +416,3 @@ form.addEventListener('reset', () => {
 <script src="forza-i18n.js"></script>
 </body>
 </html>
- 

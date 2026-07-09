@@ -357,19 +357,8 @@
           <input type="text" id="address" placeholder="House no. / Street" required>
         </div>
         <div class="form-group">
-          <label for="city">City / District *</label>
+          <label for="city">City *</label>
           <input type="text" id="city" placeholder="Benghazi" required>
-        </div>
-        <div class="form-group">
-          <label for="province">Province</label>
-          <select id="province">
-            <option>Benghazi</option>
-            <option>Tripoli</option>
-            <option>Misrata</option>
-            <option>Tobruk</option>
-            <option>Sebha</option>
-            <option>Other</option>
-          </select>
         </div>
         <div class="form-group">
           <label for="notes">Order Notes (optional)</label>
@@ -476,8 +465,7 @@ async function placeOrder() {
   if (getCart().length === 0) { showToast('⚠️ Your cart is empty!'); return; }
  
   if (document.getElementById('save-profile').checked) {
-    saveUser({ fname, lname, email, phone, address, city,
-      province: document.getElementById('province') ? document.getElementById('province').value : '' });
+    saveUser({ fname, lname, email, phone, address, city });
   }
  
   const cart     = getCart();
