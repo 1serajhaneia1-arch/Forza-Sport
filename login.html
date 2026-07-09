@@ -557,6 +557,10 @@ Login · HTML
       <p class="login-sub">Sign in to your Forza Sport account</p>
     </div>
  
+    <div id="signin-required-notice" style="display:none; background:rgba(232,0,13,0.12); border:1px solid var(--red); border-radius:8px; padding:0.85rem 1rem; margin:0 0 1.25rem; text-align:center; font-size:0.95rem;">
+      <p style="margin:0; color:#fff;">You must sign in to continue. / يجب عليك تسجيل الدخول للمتابعة.</p>
+    </div>
+
     <div class="login-panel">
  
       <!-- Alert box -->
@@ -565,12 +569,12 @@ Login · HTML
       <!-- Login form -->
       <div id="login-form-wrap">
         <div class="input-group">
-          <label for="email">Email Address</label>
+          <label for="email">Email or Phone Number</label>
           <div class="input-wrap">
             <span class="input-icon">✉️</span>
-            <input class="login-input" type="email" id="email" placeholder="you@example.com" autocomplete="email">
+            <input class="login-input" type="text" id="email" placeholder="you@example.com or 0912345678" autocomplete="username">
           </div>
-          <p class="field-err" id="email-err">Please enter a valid email</p>
+          <p class="field-err" id="email-err">Please enter a valid email or phone number</p>
         </div>
  
         <div class="input-group">
@@ -598,7 +602,7 @@ Login · HTML
         <div class="login-divider">or</div>
  
         <p class="signup-link">
-          Don't have an account? <a href="register.html">Create one free →</a>
+          Don't have an account? <a href="register.html" id="switch-to-register">Create one free →</a>
         </p>
       </div>
  
@@ -635,7 +639,7 @@ Login · HTML
   <div class="footer-social">
     <h4>Contact</h4>
     <ul>
-      <li><a href="mailto:seraj.haneia@gmail.com">seraj.haneia@gmail.com</a></li>
+      <li><a href="mailto:ForzaSportInfo@gmail.com">ForzaSportInfo@gmail.com</a></li>
       <li><a href="#">📍 Benghazi, Libya</a></li>
     </ul>
   </div>
@@ -686,9 +690,11 @@ Login · HTML
     document.getElementById('email').classList.remove('error');
     document.getElementById('password').classList.remove('error');
  
-    // Validate
+    // Validate — accepts either an email address or a 10-digit phone number
     let valid = true;
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    const isEmailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const isPhoneFormat = /^[0-9]{8,15}$/.test(email);
+    if (!email || (!isEmailFormat && !isPhoneFormat)) {
       document.getElementById('email-err').classList.add('show');
       document.getElementById('email').classList.add('error');
       valid = false;
@@ -720,7 +726,8 @@ Login · HTML
  
         // Auto-redirect after 2s if remember me unchecked
         if (!document.getElementById('remember').checked) {
-          setTimeout(() => { location.href = 'product.html'; }, 2000);
+          var nextUrl = new URLSearchParams(window.location.search).get('next');
+          setTimeout(() => { location.href = nextUrl || 'product.html'; }, 2000);
         }
       } else {
         alert.textContent  = result.message || 'Sign in failed. Please try again.';
@@ -788,6 +795,11 @@ Login · HTML
   document.addEventListener('DOMContentLoaded', function() {
     updateAuthNav();
     initUserDropdown();
+    var next = new URLSearchParams(window.location.search).get('next');
+    var switchLink = document.getElementById('switch-to-register');
+    if (next && switchLink) switchLink.href = 'register.html?next=' + encodeURIComponent(next);
+    var notice = document.getElementById('signin-required-notice');
+    if (next && notice) notice.style.display = 'block';
   });
 })();
 </script>
