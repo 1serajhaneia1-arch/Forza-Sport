@@ -99,14 +99,63 @@
     }
   }
 
-  function getStockV2() {
+  // ---- STOCK (server-backed, same pattern as products above) ----
+  // Previously this stored stock purely in localStorage, meaning each
+  // browser had its own private "reality" and admin edits from the
+  // Dashboard never actually reached customers. Now the server's
+  // data/stock.json is the source of truth; localStorage is kept only
+  // as an offline fallback/cache, same as products.
+
+  function getLocalStock() {
     try { return JSON.parse(localStorage.getItem(SIZE_STOCK_KEY)) || {}; }
     catch (e) { return {}; }
   }
 
-  function saveStockV2(stock) {
+  function saveLocalStock(stock) {
     localStorage.setItem(SIZE_STOCK_KEY, JSON.stringify(stock || {}));
   }
+
+  async function loadStock() {
+    if (IS_FILE_PROTOCOL) {
+      console.warn('[ForzaStore] Page opened via file:// — showing cached/local stock only.');
+      return getLocalStock();
+    }
+    try {
+      var res = await fetch('/api/stock', { cache: 'no-store' });
+      if (!res.ok) throw new Error('Stock API unavailable');
+      var stock = await res.json();
+      saveLocalStock(stock);
+      return stock;
+    } catch (e) {
+      return getLocalStock();
+    }
+  }
+
+  async function saveStock(stock, adminKey) {
+    saveLocalStock(stock);
+    try {
+      var url = '/api/stock' + (adminKey ? ('?key=' + encodeURIComponent(adminKey)) : '');
+      var res = await fetch(url, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(stock || {})
+      });
+      if (!res.ok) {
+        var errBody = await res.json().catch(function () { return {}; });
+        throw new Error(errBody.message || 'Stock API rejected update');
+      }
+      return await res.json();
+    } catch (e) {
+      return { saved: 'local', message: e.message };
+    }
+  }
+
+  // Synchronous accessors kept for compatibility with existing call sites
+  // (product.html, cart.js) — they read whatever's currently cached
+  // locally. Call ForzaStore.loadStock() once at page init to populate
+  // that cache with the latest server data before relying on these.
+  function getStockV2() { return getLocalStock(); }
+  function saveStockV2(stock) { saveLocalStock(stock); }
 
   window.ForzaStore = {
     PRODUCTS_KEY: PRODUCTS_KEY,
@@ -121,6 +170,8 @@
     saveProducts: saveProducts,
     getStockV2: getStockV2,
     saveStockV2: saveStockV2,
+    loadStock: loadStock,
+    saveStock: saveStock,
     showOfflineBanner: showOfflineBanner
   };
 })();

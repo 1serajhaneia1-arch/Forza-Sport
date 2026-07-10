@@ -44,6 +44,7 @@ const DATA_DIR = path.join(__dirname, 'data');
 const PRODUCTS_FILE = path.join(DATA_DIR, 'products.json');
 const USERS_FILE = path.join(DATA_DIR, 'users.json');
 const ORDERS_FILE = path.join(DATA_DIR, 'orders.json');
+const STOCK_FILE = path.join(DATA_DIR, 'stock.json');
 const IMAGES_DIR = path.join(__dirname, 'Images');
 
 // ===== ENSURE FOLDERS/FILES EXIST =====
@@ -51,6 +52,7 @@ if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 if (!fs.existsSync(IMAGES_DIR)) fs.mkdirSync(IMAGES_DIR, { recursive: true });
 if (!fs.existsSync(USERS_FILE)) fs.writeFileSync(USERS_FILE, JSON.stringify([], null, 2));
 if (!fs.existsSync(ORDERS_FILE)) fs.writeFileSync(ORDERS_FILE, JSON.stringify([], null, 2));
+if (!fs.existsSync(STOCK_FILE)) fs.writeFileSync(STOCK_FILE, JSON.stringify({}, null, 2));
 
 // Finds an existing image file by base name (e.g. "black cleats 1"), regardless
 // of its actual extension (.jpg/.jpeg/.png/.webp) or folder casing (images/Images).
@@ -84,6 +86,33 @@ function findImages(baseName) {
     .map(n => findImageFile(`${baseName} ${n}`))
     .filter(Boolean);
 }
+
+// ===== DELIVERY PRICING (LYD) — authoritative; the client's checkout page =====
+// ===== sends a "deliveryArea" name, and this table is the source of truth =====
+// ===== for its cost, same principle as never trusting client-sent prices. =====
+const DELIVERY_PRICES = {
+  // Eastern region
+  'سيدي خليفة': 20, 'سيدي علي': 20, 'دريانة': 20, 'المبني': 20, 'برسس': 20,
+  'بوجرار': 20, 'توكرة': 20, 'طلميثة': 30, 'بوترابة': 25, 'سوسة': 30,
+  'مراوة': 25, 'المرج': 20, 'مسة': 25, 'طبرق': 25, 'سلوق': 30, 'الابرق': 25,
+  'بوتراية': 30, 'فرزوغة': 20, 'البكور': 20, 'الفايدية': 30, 'الابيار': 30,
+  'تاكنس': 25, 'البياضة': 25, 'البيضاء': 25, 'درنة': 30, 'التميمى': 25,
+  'القبة': 25, 'امساعد': 25, 'ام الرزم': 25, 'مرتوبة': 25, 'قصرليبيا': 25,
+  // Western region
+  'قمينس': 20, 'اجدابيا': 20, 'بشر': 30, 'العقيلة': 30, 'البريقة': 30,
+  'راس لانوف': 30, 'السدرة': 30, 'الزويتينة': 30, 'سلطان': 20, 'بن جواد': 30,
+  'سرت': 30, 'بوقرين': 30, 'مصراتة': 30, 'زليتن': 30, 'الخمس': 30, 'مسلاتة': 30,
+  'بني وليد': 40, 'ترهونة': 40, 'ورشفانة': 30, 'الزاوية': 35, 'صرمان': 40,
+  'صبراتة': 40, 'الجميل': 45, 'زلطن': 50, 'العجيلات': 40, 'غريان': 35,
+  'الزنتان': 45, 'القرة بوللي': 30, 'قصرالخيار': 30, 'زوارة': 45, 'يفرن': 50,
+  'نالوت': 50, 'ككلة': 50, 'الرياينة': 45,
+  // Southern region
+  'جالو': 30, 'أوجلة': 30, 'أجخرة': 30, 'تازريو': 30, 'الكفرة': 35, 'سبها': 30,
+  'براك الشاطي': 40, 'الجفره': 30, 'ودان': 30, 'هون': 30, 'اوباري': 40,
+  'تراغن': 40, 'مزدة': 40, 'تمسه': 40, 'إدرى الشاطي': 45, 'القيره': 40,
+  'مرزق': 50, 'زلة': 40, 'غدامس': 50, 'ام الارانب': 50, 'القطرون': 45,
+  'غات': 50, 'عيون الشاطي': 45, 'وادى عتبة': 40, 'تهالا': 50, 'باركت': 50
+};
 
 const DEFAULT_PRODUCTS = (() => {
   const fallback = findImageFile('logo') || 'images/logo.png'; // last-resort guess if even the logo can't be found
@@ -198,6 +227,23 @@ function readOrders() {
 
 function writeOrders(orders) {
   fs.writeFileSync(ORDERS_FILE, JSON.stringify(orders, null, 2));
+}
+
+// ===== STOCK (server is the source of truth — per-size inventory counts,   =====
+// ===== keyed "Product Name::Size" for sized items or just "Product Name"   =====
+// ===== for gadgets. Shared by product.html (display), dashboard.html       =====
+// ===== (admin editing), and order placement (auto-decrement on purchase).  =====
+function readStock() {
+  try { return JSON.parse(fs.readFileSync(STOCK_FILE, 'utf8')); }
+  catch (e) { return {}; }
+}
+
+function writeStock(stock) {
+  fs.writeFileSync(STOCK_FILE, JSON.stringify(stock, null, 2));
+}
+
+function stockKeyFor(name, size) {
+  return size ? `${name}::${size}` : name;
 }
 
 function toPublicUser(u) {
@@ -376,26 +422,49 @@ app.put('/api/products', (req, res) => {
   res.json({ saved: 'server', count: products.length });
 });
 
+// ---- STOCK ----
+// GET current stock levels — public, so the storefront can show accurate
+// "In Stock" badges to every visitor, not just the admin's own browser.
+app.get('/api/stock', (req, res) => {
+  res.json(readStock());
+});
+
+// PUT (replace) all stock levels — admin only, used by the Dashboard's
+// "Save All Stock" button.
+app.put('/api/stock', (req, res) => {
+  if (!checkAdminKey(req, res)) return;
+  const stock = req.body;
+  if (!stock || typeof stock !== 'object' || Array.isArray(stock)) {
+    return res.status(400).json({ message: 'Request body must be a stock object.' });
+  }
+  writeStock(stock);
+  res.json({ saved: 'server' });
+});
+
 // ---- ORDERS ----
 // POST a new order - public (any customer, logged in or guest, can place one).
 // The server is authoritative here: it assigns the id/timestamp and starting
 // status rather than trusting whatever the browser sends for those fields.
 app.post('/api/orders', (req, res) => {
   const b = req.body || {};
-  const { fname, lname, email, phone, address, city, postcode, items } = b;
+  const { fname, lname, email, phone, address, city, postcode, items, deliveryArea } = b;
 
-  if (!fname || !lname || !email || !phone) {
+  if (!fname || !lname || !phone) {
     return res.status(400).json({ message: 'Missing required customer fields.' });
   }
   if (!Array.isArray(items) || items.length === 0) {
     return res.status(400).json({ message: 'Order must include at least one item.' });
   }
+  if (!deliveryArea || !(deliveryArea in DELIVERY_PRICES)) {
+    return res.status(400).json({ message: 'Please select a valid delivery area.' });
+  }
 
-  // Cart items look like "Product Name (42)" once a size is picked — strip
-  // that suffix so we can look the real product up in the catalog.
-  function baseItemName(fullName) {
+  // Cart items look like "Product Name (42)" once a size is picked — split
+  // that back into the base product name and size, both to look the real
+  // product up in the catalog and to decrement the correct stock entry.
+  function splitItemName(fullName) {
     const m = String(fullName || '').match(/^(.*) \(([^)]+)\)$/);
-    return m ? m[1] : String(fullName || '');
+    return m ? { base: m[1], size: m[2] } : { base: String(fullName || ''), size: null };
   }
 
   // Never trust a price the browser sends — a customer could edit the
@@ -405,7 +474,8 @@ app.post('/api/orders', (req, res) => {
   const priceByName = new Map(catalog.map(p => [p.name, p.price]));
   const verifiedItems = items.map(it => {
     const qty = Math.max(0, Number(it.qty) || 0);
-    const catalogPrice = priceByName.get(baseItemName(it.name));
+    const { base } = splitItemName(it.name);
+    const catalogPrice = priceByName.get(base);
     return {
       name: String(it.name || ''),
       qty,
@@ -415,7 +485,9 @@ app.post('/api/orders', (req, res) => {
   });
 
   const subtotal = verifiedItems.reduce((sum, it) => sum + it.price * it.qty, 0);
-  const shipping = subtotal >= 500 ? 0 : 20;
+  // Shipping is looked up from the server's own price table by delivery
+  // area name — never trusted from whatever number the client sent.
+  const shipping = DELIVERY_PRICES[deliveryArea];
   const orderNum = (b.orderNum && String(b.orderNum)) || ('FZ' + Date.now().toString().slice(-6));
 
   const orders = readOrders();
@@ -423,12 +495,23 @@ app.post('/api/orders', (req, res) => {
     return res.status(409).json({ message: 'An order with this number already exists.' });
   }
 
+  // If the customer is signed in (mandatory sign-in gate means most are),
+  // record their account id on the order so history.html can find it
+  // reliably even for accounts that skipped adding an email.
+  let userId = null;
+  try {
+    const token = req.cookies && req.cookies[SESSION_COOKIE];
+    if (token) userId = jwt.verify(token, JWT_SECRET).id;
+  } catch (e) { /* not signed in / expired session — order still allowed as guest */ }
+
   const order = {
     orderNum,
+    userId,
     createdAt: new Date().toISOString(),
-    fname, lname, email, phone,
+    fname, lname, email: email || '', phone,
     address: address || '', city: city || '', postcode: postcode || '',
     province: b.province || '',
+    deliveryArea,
     items: verifiedItems,
     subtotal,
     shipping,
@@ -438,6 +521,17 @@ app.post('/api/orders', (req, res) => {
     notes: b.notes || '',
     status: 'Pending approval'
   };
+
+  // Decrement stock server-side now that the order is confirmed real —
+  // this is the actual source of truth admins edit via the Dashboard.
+  const stock = readStock();
+  verifiedItems.forEach(it => {
+    const { base, size } = splitItemName(it.name);
+    const key = stockKeyFor(base, size);
+    const current = stock[key] !== undefined ? stock[key] : 10;
+    stock[key] = Math.max(0, current - it.qty);
+  });
+  writeStock(stock);
 
   orders.unshift(order);
   writeOrders(orders);
@@ -449,7 +543,10 @@ app.post('/api/orders', (req, res) => {
 app.get('/api/orders/mine', (req, res) => {
   const user = requireSession(req, res);
   if (!user) return; // requireSession already sent the response
-  const mine = readOrders().filter(o => o.email.toLowerCase() === user.email.toLowerCase());
+  const mine = readOrders().filter(o =>
+    o.userId === user.id ||
+    (user.email && o.email && o.email.toLowerCase() === user.email.toLowerCase())
+  );
   res.json({ orders: mine });
 });
 

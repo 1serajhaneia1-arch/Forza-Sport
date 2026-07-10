@@ -340,8 +340,8 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="email">Email Address *</label>
-        <input type="email" id="email" placeholder="you@example.com" required>
+        <label for="email">Email Address (optional)</label>
+        <input type="email" id="email" placeholder="you@example.com (optional)">
       </div>
       <div class="form-group">
         <label for="phone">Phone Number *</label>
@@ -359,6 +359,109 @@
         <div class="form-group">
           <label for="city">City *</label>
           <input type="text" id="city" placeholder="Benghazi" required>
+        </div>
+        <div class="form-group">
+          <label for="delivery-area">Delivery Area (for delivery pricing) *</label>
+          <select id="delivery-area" required onchange="renderSummary()">
+            <option value="">Select your delivery area…</option>
+            <optgroup label="Eastern Region — المنطقة الشرقية">
+              <option value="سيدي خليفة" data-price="20">سيدي خليفة — 20 LYD</option>
+              <option value="سيدي علي" data-price="20">سيدي علي — 20 LYD</option>
+              <option value="دريانة" data-price="20">دريانة — 20 LYD</option>
+              <option value="المبني" data-price="20">المبني — 20 LYD</option>
+              <option value="برسس" data-price="20">برسس — 20 LYD</option>
+              <option value="بوجرار" data-price="20">بوجرار — 20 LYD</option>
+              <option value="توكرة" data-price="20">توكرة — 20 LYD</option>
+              <option value="طلميثة" data-price="30">طلميثة — 30 LYD</option>
+              <option value="بوترابة" data-price="25">بوترابة — 25 LYD</option>
+              <option value="سوسة" data-price="30">سوسة — 30 LYD</option>
+              <option value="مراوة" data-price="25">مراوة — 25 LYD</option>
+              <option value="المرج" data-price="20">المرج — 20 LYD</option>
+              <option value="مسة" data-price="25">مسة — 25 LYD</option>
+              <option value="طبرق" data-price="25">طبرق — 25 LYD</option>
+              <option value="سلوق" data-price="30">سلوق — 30 LYD</option>
+              <option value="الابرق" data-price="25">الابرق — 25 LYD</option>
+              <option value="بوتراية" data-price="30">بوتراية — 30 LYD</option>
+              <option value="فرزوغة" data-price="20">فرزوغة — 20 LYD</option>
+              <option value="البكور" data-price="20">البكور — 20 LYD</option>
+              <option value="الفايدية" data-price="30">الفايدية — 30 LYD</option>
+              <option value="الابيار" data-price="30">الابيار — 30 LYD</option>
+              <option value="تاكنس" data-price="25">تاكنس — 25 LYD</option>
+              <option value="البياضة" data-price="25">البياضة — 25 LYD</option>
+              <option value="البيضاء" data-price="25">البيضاء — 25 LYD</option>
+              <option value="درنة" data-price="30">درنة — 30 LYD</option>
+              <option value="التميمى" data-price="25">التميمى — 25 LYD</option>
+              <option value="القبة" data-price="25">القبة — 25 LYD</option>
+              <option value="امساعد" data-price="25">امساعد — 25 LYD</option>
+              <option value="ام الرزم" data-price="25">ام الرزم — 25 LYD</option>
+              <option value="مرتوبة" data-price="25">مرتوبة — 25 LYD</option>
+              <option value="قصرليبيا" data-price="25">قصرليبيا — 25 LYD</option>
+            </optgroup>
+            <optgroup label="Western Region — المنطقة الغربية">
+              <option value="قمينس" data-price="20">قمينس — 20 LYD</option>
+              <option value="اجدابيا" data-price="20">اجدابيا — 20 LYD</option>
+              <option value="بشر" data-price="30">بشر — 30 LYD</option>
+              <option value="العقيلة" data-price="30">العقيلة — 30 LYD</option>
+              <option value="البريقة" data-price="30">البريقة — 30 LYD</option>
+              <option value="راس لانوف" data-price="30">راس لانوف — 30 LYD</option>
+              <option value="السدرة" data-price="30">السدرة — 30 LYD</option>
+              <option value="الزويتينة" data-price="30">الزويتينة — 30 LYD</option>
+              <option value="سلطان" data-price="20">سلطان — 20 LYD</option>
+              <option value="بن جواد" data-price="30">بن جواد — 30 LYD</option>
+              <option value="سرت" data-price="30">سرت — 30 LYD</option>
+              <option value="بوقرين" data-price="30">بوقرين — 30 LYD</option>
+              <option value="مصراتة" data-price="30">مصراتة — 30 LYD</option>
+              <option value="زليتن" data-price="30">زليتن — 30 LYD</option>
+              <option value="الخمس" data-price="30">الخمس — 30 LYD</option>
+              <option value="مسلاتة" data-price="30">مسلاتة — 30 LYD</option>
+              <option value="بني وليد" data-price="40">بني وليد — 40 LYD</option>
+              <option value="ترهونة" data-price="40">ترهونة — 40 LYD</option>
+              <option value="ورشفانة" data-price="30">ورشفانة — 30 LYD</option>
+              <option value="الزاوية" data-price="35">الزاوية — 35 LYD</option>
+              <option value="صرمان" data-price="40">صرمان — 40 LYD</option>
+              <option value="صبراتة" data-price="40">صبراتة — 40 LYD</option>
+              <option value="الجميل" data-price="45">الجميل — 45 LYD</option>
+              <option value="زلطن" data-price="50">زلطن — 50 LYD</option>
+              <option value="العجيلات" data-price="40">العجيلات — 40 LYD</option>
+              <option value="غريان" data-price="35">غريان — 35 LYD</option>
+              <option value="الزنتان" data-price="45">الزنتان — 45 LYD</option>
+              <option value="القرة بوللي" data-price="30">القرة بوللي — 30 LYD</option>
+              <option value="قصرالخيار" data-price="30">قصرالخيار — 30 LYD</option>
+              <option value="زوارة" data-price="45">زوارة — 45 LYD</option>
+              <option value="يفرن" data-price="50">يفرن — 50 LYD</option>
+              <option value="نالوت" data-price="50">نالوت — 50 LYD</option>
+              <option value="ككلة" data-price="50">ككلة — 50 LYD</option>
+              <option value="الرياينة" data-price="45">الرياينة — 45 LYD</option>
+            </optgroup>
+            <optgroup label="Southern Region — المنطقة الجنوبية">
+              <option value="جالو" data-price="30">جالو — 30 LYD</option>
+              <option value="أوجلة" data-price="30">أوجلة — 30 LYD</option>
+              <option value="أجخرة" data-price="30">أجخرة — 30 LYD</option>
+              <option value="تازريو" data-price="30">تازريو — 30 LYD</option>
+              <option value="الكفرة" data-price="35">الكفرة — 35 LYD</option>
+              <option value="سبها" data-price="30">سبها — 30 LYD</option>
+              <option value="براك الشاطي" data-price="40">براك الشاطي — 40 LYD</option>
+              <option value="الجفره" data-price="30">الجفره — 30 LYD</option>
+              <option value="ودان" data-price="30">ودان — 30 LYD</option>
+              <option value="هون" data-price="30">هون — 30 LYD</option>
+              <option value="اوباري" data-price="40">اوباري — 40 LYD</option>
+              <option value="تراغن" data-price="40">تراغن — 40 LYD</option>
+              <option value="مزدة" data-price="40">مزدة — 40 LYD</option>
+              <option value="تمسه" data-price="40">تمسه — 40 LYD</option>
+              <option value="إدرى الشاطي" data-price="45">إدرى الشاطي — 45 LYD</option>
+              <option value="القيره" data-price="40">القيره — 40 LYD</option>
+              <option value="مرزق" data-price="50">مرزق — 50 LYD</option>
+              <option value="زلة" data-price="40">زلة — 40 LYD</option>
+              <option value="غدامس" data-price="50">غدامس — 50 LYD</option>
+              <option value="ام الارانب" data-price="50">ام الارانب — 50 LYD</option>
+              <option value="القطرون" data-price="45">القطرون — 45 LYD</option>
+              <option value="غات" data-price="50">غات — 50 LYD</option>
+              <option value="عيون الشاطي" data-price="45">عيون الشاطي — 45 LYD</option>
+              <option value="وادى عتبة" data-price="40">وادى عتبة — 40 LYD</option>
+              <option value="تهالا" data-price="50">تهالا — 50 LYD</option>
+              <option value="باركت" data-price="50">باركت — 50 LYD</option>
+            </optgroup>
+          </select>
         </div>
         <div class="form-group">
           <label for="notes">Order Notes (optional)</label>
@@ -432,6 +535,13 @@ let selectedPayment  = 'cod';
 let fulfillmentMethod = 'delivery';
 const checkoutMoney = window.ForzaStore ? window.ForzaStore.formatMoney : (v => 'LYD ' + Number(v || 0).toLocaleString());
  
+function getDeliveryPrice() {
+  const sel = document.getElementById('delivery-area');
+  if (!sel || !sel.value) return null; // no area chosen yet
+  const opt = sel.options[sel.selectedIndex];
+  return Number(opt.getAttribute('data-price')) || 0;
+}
+
 function renderSummary() {
   const cart = getCart();
   const list = document.getElementById('order-items-list');
@@ -445,10 +555,13 @@ function renderSummary() {
         <span class="order-item-price">${checkoutMoney(i.price * i.qty)}</span>
       </div>`).join('');
   }
-  const sub  = getCartTotal();
-  const ship = sub === 0 ? 0 : sub >= 500 ? 0 : 20;
+  const sub = getCartTotal();
+  const deliveryPrice = getDeliveryPrice();
+  const ship = sub === 0 ? 0 : (deliveryPrice === null ? 0 : deliveryPrice);
   document.getElementById('co-sub').textContent   = checkoutMoney(sub);
-  document.getElementById('co-ship').textContent  = ship === 0 ? (sub > 0 ? 'FREE' : checkoutMoney(0)) : checkoutMoney(ship);
+  document.getElementById('co-ship').textContent  = deliveryPrice === null && sub > 0
+    ? 'Select delivery area'
+    : checkoutMoney(ship);
   document.getElementById('co-total').textContent = checkoutMoney(sub + ship);
 }
  
@@ -459,18 +572,21 @@ async function placeOrder() {
   const phone    = document.getElementById('phone').value.trim();
   const address  = document.getElementById('address').value.trim();
   const city     = document.getElementById('city').value.trim();
- 
-  if (!fname || !lname || !email || !phone) { showToast('⚠️ Please fill in all required fields.'); return; }
+  const deliveryAreaSel = document.getElementById('delivery-area');
+  const deliveryArea = deliveryAreaSel ? deliveryAreaSel.value : '';
+
+  if (!fname || !lname || !phone) { showToast('⚠️ Please fill in all required fields.'); return; }
   if (!address || !city) { showToast('⚠️ Please fill in your shipping address.'); return; }
+  if (!deliveryArea) { showToast('⚠️ Please select your delivery area to calculate shipping.'); return; }
   if (getCart().length === 0) { showToast('⚠️ Your cart is empty!'); return; }
- 
+
   if (document.getElementById('save-profile').checked) {
     saveUser({ fname, lname, email, phone, address, city });
   }
- 
+
   const cart     = getCart();
   const sub      = getCartTotal();
-  const ship     = sub >= 500 ? 0 : 20;
+  const ship     = getDeliveryPrice() || 0;
   const orderNum = 'FZ' + Date.now().toString().slice(-6);
   const orderDate = new Date().toLocaleString('en-GB', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
  
@@ -489,6 +605,7 @@ async function placeOrder() {
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
       body: JSON.stringify({ orderNum, fname, lname, email, phone, address, city,
+        deliveryArea,
         items: cart, subtotal: sub, shipping: ship, total: sub + ship,
         fulfillment: fulfillmentMethod, payment: selectedPayment }),
     });
@@ -503,8 +620,8 @@ async function placeOrder() {
     total: sub + ship, fulfillment: fulfillmentMethod, payment: selectedPayment,
     customer: { fname, lname, email, phone, address, city }, status: 'Pending approval' });
  
-  // Reduce stock & clear cart
-  cart.forEach(item => reduceStock(item.name, item.qty));
+  // Stock is now decremented server-side (as part of the order write above),
+  // so it's accurate for every visitor immediately — no local-only reduction needed.
   clearCart();
   updateCartBadge();
  
@@ -520,7 +637,10 @@ async function placeOrder() {
   }
 }
  
-document.addEventListener('DOMContentLoaded', renderSummary);
+document.addEventListener('DOMContentLoaded', async function() {
+  if (window.ForzaStore) { try { await window.ForzaStore.loadStock(); } catch (e) {} }
+  renderSummary();
+});
 </script>
 
 

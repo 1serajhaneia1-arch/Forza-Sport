@@ -929,7 +929,7 @@ function showTab(name, btn) {
   if (btn) btn.classList.add('active');
   if (name === 'overview')  syncProducts().then(renderOverview);
   if (name === 'products')  syncProducts().then(renderProductsTable);
-  if (name === 'stock')     syncProducts().then(renderStockManager);
+  if (name === 'stock')     syncProducts().then(() => window.ForzaStore.loadStock()).then(renderStockManager);
   if (name === 'orders')    renderOrders();
 }
  
@@ -1062,16 +1062,26 @@ function renderStockManager() {
   }).join('');
 }
  
-function saveAllStock() {
+async function saveAllStock() {
   const products = getProducts();
+  const stock = getStockV2(); // start from current cache, then overwrite with the form's values
   products.forEach(p => {
     const sizes = p.cat === 'gadgets' ? [null] : (p.cat === 'shoes' ? SHOE_SIZES : SHIRT_SIZES);
     sizes.forEach(s => {
       const el = document.getElementById(`sm_${p.id}_${s || 'qty'}`);
-      if (el) setSizeStock(p.name, s, parseInt(el.value) || 0);
+      if (el) {
+        const key = s ? `${p.name}::${s}` : p.name;
+        stock[key] = parseInt(el.value) || 0;
+      }
     });
   });
-  showToast('✅ Stock levels saved!');
+
+  const result = await window.ForzaStore.saveStock(stock, ADMIN_KEY);
+  if (result && result.saved === 'server') {
+    showToast('✅ Stock levels saved!');
+  } else {
+    showToast('⚠️ Could not reach the server — stock NOT saved. Check your connection and admin key, then try again.');
+  }
 }
  
 // ===== ORDERS =====
