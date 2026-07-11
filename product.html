@@ -3,482 +3,274 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Forza Sport — Admin Dashboard</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+  <title>Products – Forza Sport E‑Store</title>
+  
+  <link rel="icon" type="image/x-icon" href="./Images/favicon.jpeg">
+  <link rel="stylesheet" href="style.css">
   <style>
-    :root {
-      --red:    #e8000d;
-      --red2:   #b8000a;
-      --cyan:   #00e5ff;
-      --dark:   #0d0d0d;
-      --dark2:  #161616;
-      --dark3:  #1e1e1e;
-      --dark4:  #272727;
-      --border: rgba(232,0,13,0.25);
-      --text:   #ffffff;
-      --muted:  #aaaaaa;
-      --green:  #28a745;
-      --orange: #ff9500;
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Barlow', sans-serif;
-      background: var(--dark);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-    }
- 
-    /* ===== SIDEBAR ===== */
-    .sidebar {
-      width: 240px;
-      min-height: 100vh;
-      background: #0a0a0a;
-      border-right: 1px solid #1e1e1e;
-      display: flex;
-      flex-direction: column;
+    body::before {
+      content: '';
       position: fixed;
-      top: 0; left: 0;
-      z-index: 100;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(232,0,13,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(232,0,13,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: 0;
+      pointer-events: none;
     }
-    .sidebar-logo {
-      padding: 1.5rem 1.5rem 1rem;
-      border-bottom: 1px solid #1e1e1e;
-    }
-    .sidebar-logo .brand {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.5rem;
-      letter-spacing: 0.12em;
-      color: #fff;
-    }
-    .sidebar-logo .brand span { color: var(--red); }
-    .sidebar-logo .admin-tag {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.65rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
-      color: var(--muted);
-      display: block;
-      margin-top: 2px;
-    }
-    .nav-section-label {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.65rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: #444;
-      padding: 1.2rem 1.5rem 0.4rem;
-    }
-    .nav-item {
+    .products-wrapper { position: relative; z-index: 1; }
+    .category-btns {
       display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.7rem 1.5rem;
+      justify-content: center;
+      gap: 0.8rem;
+      padding: 0 2rem 2rem;
+      flex-wrap: wrap;
+    }
+    .cat-btn {
+      padding: 0.6rem 1.6rem;
+      background: transparent;
       color: var(--muted);
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 0.9rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
-      cursor: pointer;
-      border: none;
-      background: none;
-      width: 100%;
-      text-align: left;
-      transition: color 0.2s, background 0.2s;
-      border-left: 3px solid transparent;
-      text-decoration: none;
-    }
-    .nav-item:hover { color: #fff; background: rgba(255,255,255,0.04); }
-    .nav-item.active { color: #fff; border-left-color: var(--red); background: rgba(232,0,13,0.08); }
-    .nav-icon { font-size: 1rem; width: 20px; text-align: center; }
-    .sidebar-bottom {
-      margin-top: auto;
-      padding: 1rem 1.5rem;
-      border-top: 1px solid #1e1e1e;
-    }
-    .back-to-site {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--muted);
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.8rem;
-      font-weight: 700;
-      text-transform: uppercase;
       letter-spacing: 0.08em;
-      text-decoration: none;
-      transition: color 0.2s;
+      border: 2px solid #333;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.2s;
     }
-    .back-to-site:hover { color: var(--red); }
- 
-    /* ===== MAIN ===== */
-    .main {
-      margin-left: 240px;
-      flex: 1;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    .topbar {
-      background: rgba(10,10,10,0.95);
-      border-bottom: 1px solid #1e1e1e;
-      padding: 1rem 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 50;
-    }
-    .topbar-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.4rem;
-      letter-spacing: 0.1em;
-      color: #fff;
-    }
-    .topbar-title span { color: var(--red); }
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .admin-badge {
-      background: rgba(232,0,13,0.15);
-      border: 1px solid rgba(232,0,13,0.3);
-      color: var(--red);
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      padding: 0.3rem 0.8rem;
-      border-radius: 20px;
-    }
-    .content { padding: 2rem; flex: 1; }
- 
-    /* ===== TABS ===== */
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
- 
-    /* ===== STATS GRID ===== */
-    .stats-grid {
+    .cat-btn:hover { border-color: var(--red); color: var(--text); }
+    .cat-btn.active { background: var(--red); border-color: var(--red); color: #fff; }
+    .products-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
-      margin-bottom: 2rem;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      padding: 0 3rem 5rem;
+      max-width: 1200px;
+      margin: 0 auto;
     }
-    .stat-card {
-      background: var(--dark2);
-      border: 1px solid #222;
+    .product-card {
+      background: var(--dark3);
+      border: 1px solid #252525;
       border-radius: 8px;
-      padding: 1.2rem 1.4rem;
-      position: relative;
       overflow: hidden;
+      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
     }
-    .stat-card::before {
-      content: '';
+    .product-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--red);
+      box-shadow: 0 12px 35px rgba(232,0,13,0.15);
+    }
+    .product-card.hidden { display: none; }
+    .product-img-wrap {
+      position: relative;
+      width: 100%;
+      height: 230px;
+      overflow: hidden;
+      background: var(--dark4);
+      cursor: pointer;
+    }
+    .product-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.35s; }
+    .product-card:hover .product-img-wrap img { transform: scale(1.07); }
+    .img-dots {
       position: absolute;
-      top: 0; left: 0;
-      width: 3px; height: 100%;
-      background: var(--red);
+      bottom: 9px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      z-index: 2;
     }
-    .stat-card.green::before { background: var(--green); }
-    .stat-card.orange::before { background: var(--orange); }
-    .stat-card.cyan::before { background: var(--cyan); }
-    .stat-label {
+    .img-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.45);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      box-shadow: 0 0 2px rgba(0,0,0,0.6);
+    }
+    .img-dot:hover { background: rgba(255,255,255,0.8); }
+    .img-dot.active { background: #fff; transform: scale(1.3); }
+    .cat-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: var(--red);
+      color: #fff;
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 0.7rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: var(--muted);
-      margin-bottom: 0.4rem;
-    }
-    .stat-value {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 2.2rem;
-      letter-spacing: 0.05em;
-      line-height: 1;
-      color: #fff;
-    }
-    .stat-value.red { color: var(--red); }
-    .stat-value.green { color: var(--green); }
-    .stat-value.orange { color: var(--orange); }
-    .stat-value.cyan { color: var(--cyan); }
-    .stat-sub {
-      font-size: 0.75rem;
-      color: var(--muted);
-      margin-top: 0.3rem;
-    }
- 
-    /* ===== SECTION ===== */
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1.2rem;
-    }
-    .section-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.4rem;
       letter-spacing: 0.08em;
+      padding: 0.25rem 0.6rem;
+      border-radius: 3px;
     }
-    .btn {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: 0.55rem 1.2rem;
-      border-radius: 4px;
-      cursor: pointer;
-      border: none;
-      transition: all 0.2s;
-    }
-    .btn-red { background: var(--red); color: #fff; }
-    .btn-red:hover { background: var(--red2); }
-    .btn-ghost {
-      background: transparent;
-      color: var(--muted);
-      border: 1px solid #333;
-    }
-    .btn-ghost:hover { border-color: var(--red); color: #fff; }
-    .btn-green { background: var(--green); color: #fff; }
-    .btn-green:hover { background: #1e8c35; }
-    .btn-sm { padding: 0.3rem 0.7rem; font-size: 0.75rem; }
- 
-    /* ===== PRODUCT GRID (dashboard tab) ===== */
-    .product-dash-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-    .product-dash-card {
-      background: var(--dark2);
-      border: 1px solid #222;
-      border-radius: 8px;
-      overflow: hidden;
-      transition: border-color 0.2s;
-    }
-    .product-dash-card:hover { border-color: #333; }
-    .product-dash-img {
-      width: 100%;
-      height: 140px;
-      object-fit: cover;
-      background: var(--dark3);
-      display: block;
-    }
-    .product-dash-body { padding: 1rem; }
-    .product-dash-cat {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.65rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--red);
-      margin-bottom: 0.2rem;
-    }
-    .product-dash-name {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      margin-bottom: 0.3rem;
-    }
-    .product-dash-price {
-      font-size: 1rem;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 0.5rem;
-    }
-    .stock-pill {
-      display: inline-block;
+    .stock-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 0.68rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.06em;
-      padding: 0.2rem 0.6rem;
+      padding: 0.22rem 0.55rem;
       border-radius: 3px;
-      margin-bottom: 0.7rem;
     }
-    .stock-pill.plenty { background: rgba(40,167,69,0.2); color: #28a745; }
-    .stock-pill.low    { background: rgba(255,149,0,0.2); color: #ff9500; }
-    .stock-pill.critical { background: rgba(232,0,13,0.2); color: #e8000d; }
-    .stock-pill.out    { background: #222; color: #555; }
-    .product-dash-actions { display: flex; gap: 0.5rem; }
- 
-    /* ===== PRODUCTS MANAGER TABLE ===== */
-    .table-wrap { overflow-x: auto; }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.88rem;
+    .stock-badge.plenty { background: rgba(40,167,69,0.85); color: #fff; }
+    .stock-badge.low { background: rgba(255,165,0,0.9); color: #111; }
+    .stock-badge.critical { background: rgba(232,0,13,0.9); color: #fff; }
+    .stock-badge.out { background: #333; color: #666; }
+    .quick-view-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.25s;
     }
-    thead th {
-      background: #111;
-      color: var(--muted);
+    .product-card:hover .quick-view-overlay { background: rgba(0,0,0,0.4); }
+    .quick-view-overlay span {
+      background: #fff;
+      color: #111;
       font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 0.88rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.5rem 1.2rem;
+      border-radius: 4px;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.25s, transform 0.25s;
+      cursor: pointer;
+    }
+    .product-card:hover .quick-view-overlay span { opacity: 1; transform: translateY(0); }
+    .product-info { padding: 1.2rem; }
+    .p-cat {
       font-size: 0.7rem;
+      font-family: 'Barlow Condensed', sans-serif;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.12em;
-      padding: 0.7rem 1rem;
-      text-align: left;
-      border-bottom: 1px solid #222;
-      white-space: nowrap;
-    }
-    tbody td {
-      padding: 0.75rem 1rem;
-      border-bottom: 1px solid #1a1a1a;
-      vertical-align: middle;
-      color: #ccc;
-    }
-    tbody tr:hover td { background: rgba(255,255,255,0.02); }
-    .td-img {
-      width: 50px;
-      height: 50px;
-      object-fit: cover;
-      border-radius: 4px;
-      background: var(--dark3);
-    }
-    .td-name {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 700;
-      text-transform: uppercase;
-      font-size: 0.9rem;
-      color: #fff;
-    }
-    .td-price { color: #fff; font-weight: 700; }
-    .td-actions { display: flex; gap: 0.4rem; align-items: center; }
- 
-    /* ===== MODAL ===== */
-    .modal-bg {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.88);
-      z-index: 500;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-    }
-    .modal-bg.open { display: flex; }
-    .modal-box {
-      background: #181818;
-      border: 1px solid #2e2e2e;
-      border-top: 3px solid var(--red);
-      border-radius: 10px;
-      max-width: 520px;
-      width: 100%;
-      padding: 2rem;
-      position: relative;
-      
-    }
-    .modal-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.6rem;
-      letter-spacing: 0.08em;
       color: var(--red);
-      margin-bottom: 0.2rem;
+      margin-bottom: 0.3rem;
     }
-    .modal-sub { font-size: 0.82rem; color: var(--muted); margin-bottom: 1.5rem; }
-    .modal-close-btn {
-      position: absolute; top: 12px; right: 14px;
-      background: rgba(255,255,255,0.08); border: none; color: #fff;
-      font-size: 1rem; cursor: pointer; width: 28px; height: 28px;
-      border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
-    }
-    .modal-close-btn:hover { background: var(--red); }
-    .form-group { margin-bottom: 1rem; }
-    .form-label {
-      display: block;
+    .p-name {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.75rem;
+      font-size: 1rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.35rem;
+      line-height: 1.2;
     }
-    .form-input, .form-select, .form-textarea {
-      width: 100%;
-      padding: 0.65rem 0.9rem;
-      background: var(--dark4);
-      border: 1.5px solid #333;
-      border-radius: 4px;
-      color: #fff;
-      font-family: 'Barlow', sans-serif;
-      font-size: 0.9rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--red); }
-    .form-select option { background: #222; }
-    .form-textarea { resize: vertical; min-height: 80px; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .form-actions { display: flex; gap: 0.8rem; margin-top: 1.5rem; }
- 
-    /* ===== STOCK MANAGER ===== */
-    .stock-table-wrap { overflow-x: auto; }
-    .stock-product-row {
-      background: var(--dark2);
-      border: 1px solid #222;
-      border-radius: 8px;
-      padding: 1rem 1.2rem;
-      margin-bottom: 0.8rem;
-    }
-    .stock-product-name {
+    .p-price { font-size: 1.15rem; font-weight: 700; color: #fff; margin-bottom: 0.4rem; }
+    .p-stock-line {
+      font-size: 0.75rem;
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.95rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.06em;
       margin-bottom: 0.8rem;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
     }
-    .stock-cat-pill {
-      font-size: 0.62rem;
+    .p-stock-line.plenty { color: #28a745; }
+    .p-stock-line.low { color: orange; }
+    .p-stock-line.critical { color: #e8000d; }
+    .p-stock-line.out { color: #555; }
+    .add-btn {
+      width: 100%;
+      padding: 0.65rem;
+      background: var(--red);
+      color: #fff;
       font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.9rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: 0.15rem 0.5rem;
-      border-radius: 3px;
-      background: rgba(232,0,13,0.15);
-      color: var(--red);
+      letter-spacing: 0.06em;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
     }
-    .size-inputs {
+    .add-btn:hover { background: var(--red2); }
+    .add-btn:disabled { background: #333; color: #555; cursor: not-allowed; }
+ 
+    /* ADMIN STOCK PANEL */
+    #stock-admin-panel {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.9);
+      z-index: 3000;
+      overflow-y: auto;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+    #stock-admin-panel.open { display: flex; }
+    .admin-box {
+      background: #181818;
+      border: 1px solid #2e2e2e;
+      border-radius: 10px;
+      max-width: 700px;
+      width: 100%;
+      padding: 2rem;
+      position: relative;
+    }
+    .admin-box h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 0.08em;
+      color: var(--red);
+      margin-bottom: 0.3rem;
+    }
+    .admin-box p { font-size: 0.82rem; color: var(--muted); margin-bottom: 1.5rem; }
+    .admin-close {
+      position: absolute; top: 12px; right: 14px;
+      background: rgba(255,255,255,0.1); border: none; color: #fff;
+      font-size: 1.1rem; cursor: pointer; width: 30px; height: 30px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .admin-close:hover { background: var(--red); }
+    .admin-product-section { margin-bottom: 1.5rem; }
+    .admin-product-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #fff;
+      margin-bottom: 0.6rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid #2a2a2a;
+    }
+    .stock-size-grid {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.6rem;
+      gap: 0.5rem;
     }
-    .size-input-item {
+    .stock-size-item {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 0.25rem;
     }
-    .size-input-label {
+    .stock-size-label {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.68rem;
+      font-size: 0.75rem;
       font-weight: 700;
       text-transform: uppercase;
       color: var(--muted);
     }
-    .size-input-field {
-      width: 58px;
-      padding: 0.4rem 0.2rem;
+    .stock-input {
+      width: 55px;
+      padding: 0.4rem 0.3rem;
       background: var(--dark4);
       border: 1.5px solid #333;
       border-radius: 4px;
@@ -488,865 +280,995 @@
       font-weight: 700;
       text-align: center;
       outline: none;
-      transition: border-color 0.2s;
     }
-    .size-input-field:focus { border-color: var(--red); }
-    .size-input-field.zero { border-color: #e8000d33; color: #e8000d; }
- 
-    /* ===== ORDERS ===== */
-    .order-status {
-      display: inline-block;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      padding: 0.2rem 0.6rem;
-      border-radius: 3px;
-    }
-    .status-confirmed  { background: rgba(0,229,255,0.15); color: #00e5ff; }
-    .status-processing { background: rgba(255,149,0,0.15); color: #ff9500; }
-    .status-shipped    { background: rgba(155,0,255,0.15); color: #bb88ff; }
-    .status-delivered  { background: rgba(40,167,69,0.15); color: #28a745; }
-    .status-cancelled  { background: rgba(232,0,13,0.15); color: #e8000d; }
- 
-    /* ===== TOAST ===== */
-    .toast {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      background: var(--dark4);
-      border: 1px solid var(--red);
-      border-left: 4px solid var(--red);
+    .stock-input:focus { border-color: var(--red); }
+    .stock-save-btn {
+      width: 100%;
+      margin-top: 1.5rem;
+      padding: 0.85rem;
+      background: var(--red);
       color: #fff;
-      padding: 0.9rem 1.4rem;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      z-index: 9999;
-      transform: translateX(120%);
-      transition: transform 0.3s cubic-bezier(.34,1.56,.64,1);
-      max-width: 300px;
-    }
-    .toast.show { transform: translateX(0); }
- 
-    /* ===== CONFIRM DELETE ===== */
-    .confirm-box {
-      background: #181818;
-      border: 1px solid #2e2e2e;
-      border-top: 3px solid var(--red);
-      border-radius: 10px;
-      max-width: 380px;
-      width: 100%;
-      padding: 2rem;
-      text-align: center;
-      
-    }
-    .confirm-box h3 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.5rem;
-      color: var(--red);
-      margin-bottom: 0.5rem;
-    }
-    .confirm-box p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
-    .confirm-actions { display: flex; gap: 0.8rem; justify-content: center; }
- 
-    /* ===== IMAGE PREVIEW ===== */
-    .img-preview-wrap {
-      margin-top: 0.5rem;
-      width: 100%;
-      height: 140px;
-      background: var(--dark3);
-      border: 1.5px dashed #333;
-      border-radius: 4px;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .img-preview-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: none;
-    }
-    .img-preview-placeholder {
-      color: #555;
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.8rem;
+      font-size: 1rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.08em;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
     }
- 
-    /* ===== EMPTY STATE ===== */
-    .empty-state {
-      text-align: center;
-      padding: 3rem 2rem;
+    .stock-save-btn:hover { background: var(--red2); }
+    .admin-trigger {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1a1a1a;
+      border: 1px solid #333;
       color: var(--muted);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      z-index: 100;
     }
-    .empty-state .empty-icon { font-size: 3rem; margin-bottom: 1rem; }
-    .empty-state p { font-size: 0.9rem; }
+    .admin-trigger:hover { border-color: var(--red); color: #fff; }
  
-    /* ===== SEARCH BAR ===== */
-    .search-bar {
-      display: flex;
-      gap: 0.8rem;
-      margin-bottom: 1.5rem;
+    /* MODAL */
+    #modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.88);
+      z-index: 1000;
       align-items: center;
+      justify-content: center;
+      padding: 1rem;
     }
-    .search-input {
-      padding: 0.6rem 1rem;
-      background: var(--dark2);
-      border: 1px solid #222;
-      border-radius: 4px;
+    #modal-overlay.open { display: flex; }
+    #modal-box {
+      background: #181818;
+      border: 1px solid #2e2e2e;
+      border-radius: 10px;
+      max-width: 700px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+      position: relative;
+    }
+    .modal-close {
+      position: absolute; top: 12px; right: 14px;
+      background: rgba(255,255,255,0.1); border: none; color: #fff;
+      font-size: 1.1rem; cursor: pointer; z-index: 2;
+      width: 30px; height: 30px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .modal-close:hover { background: var(--red); }
+    #modal-img { position: relative; }
+    #modal-img img { width: 100%; height: 100%; object-fit: cover; min-height: 320px; }
+    .modal-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.5);
+      border: none;
       color: #fff;
-      font-family: 'Barlow', sans-serif;
-      font-size: 0.88rem;
-      outline: none;
-      transition: border-color 0.2s;
-      flex: 1;
-      max-width: 320px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      font-size: 1.3rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+      z-index: 2;
     }
-    .search-input:focus { border-color: var(--red); }
-    .filter-select {
-      padding: 0.6rem 1rem;
-      background: var(--dark2);
-      border: 1px solid #222;
-      border-radius: 4px;
-      color: var(--muted);
+    .modal-nav:hover { background: var(--red); }
+    .modal-nav-prev { left: 10px; }
+    .modal-nav-next { right: 10px; }
+    .modal-dots {
+      position: absolute;
+      bottom: 14px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      z-index: 2;
+    }
+    #modal-info { padding: 2rem; display: flex; flex-direction: column; gap: 0.8rem; }
+    .modal-cat { font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--red); }
+    .modal-name { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.05em; line-height: 1; }
+    .modal-price { font-size: 1.7rem; font-weight: 700; }
+    .modal-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+    .modal-stock { font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+    .modal-hr { border: none; border-top: 1px solid #2a2a2a; }
+    .modal-add-btn { width: 100%; padding: 0.85rem; background: var(--red); color: #fff; font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s; }
+    .modal-add-btn:hover { background: var(--red2); }
+    .modal-add-btn:disabled { background: #333; color: #555; cursor: not-allowed; }
+    .modal-cart-link { display: block; text-align: center; color: var(--muted); text-decoration: none; font-size: 0.88rem; transition: color 0.2s; }
+    .modal-cart-link:hover { color: #fff; }
+ 
+    /* SIZE PICKER */
+    #size-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 2000; align-items: center; justify-content: center; padding: 1rem; }
+    #size-overlay.open { display: flex; }
+    #size-box { background: #181818; border: 1px solid #2e2e2e; border-radius: 10px; max-width: 420px; width: 100%; padding: 2rem; position: relative;  text-align: center; }
+    #size-box h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 0.06em; margin-bottom: 0.3rem; }
+    #size-box p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; }
+    .size-close { position: absolute; top: 12px; right: 14px; background: rgba(255,255,255,0.1); border: none; color: #fff; font-size: 1.1rem; cursor: pointer; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+    .size-close:hover { background: var(--red); }
+    .size-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem; margin-bottom: 1.5rem; }
+    .size-btn {
+      padding: 0.55rem 0.3rem;
+      background: var(--dark4);
+      border: 1.5px solid #333;
+      border-radius: 5px;
+      color: #fff;
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 0.85rem;
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      outline: none;
       cursor: pointer;
+      transition: all 0.18s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      line-height: 1.2;
     }
-    .filter-select option { background: #222; color: #fff; }
- 
-    /* ===== SCROLLBAR ===== */
-    ::-webkit-scrollbar { width: 5px; height: 5px; }
-    ::-webkit-scrollbar-track { background: var(--dark); }
-    ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--red); }
+    .size-btn:hover:not(:disabled) { border-color: var(--red); color: var(--red); }
+    .size-btn.selected { background: var(--red); border-color: var(--red); color: #fff; }
+    .size-btn:disabled { background: #1a1a1a; border-color: #222; color: #444; cursor: not-allowed; }
+    .size-stock-hint {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      opacity: 0.85;
+    }
+    .size-btn.out-of-stock .size-stock-hint { color: #555; }
+    .size-btn.low-stock .size-stock-hint { color: orange; }
+    .size-btn.critical-stock .size-stock-hint { color: #e8000d; }
+    .size-btn.selected .size-stock-hint { color: rgba(255,255,255,0.85); }
+    .size-confirm-btn { width: 100%; padding: 0.85rem; background: #444; color: #888; font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; border: none; border-radius: 4px; cursor: not-allowed; transition: background 0.2s, color 0.2s; }
+    .size-confirm-btn.ready { background: var(--red); color: #fff; cursor: pointer; }
+    .size-confirm-btn.ready:hover { background: var(--red2); }
+    .size-required-msg { color: var(--red); font-size: 0.82rem; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.5rem; text-align: center; min-height: 1.2em; }
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+      100% { transform: translateX(0); }
+    }
+    
+    @media (max-width: 900px) { .products-grid { grid-template-columns: repeat(2, 1fr); padding: 0 1.5rem 3rem; } }
+    @media (max-width: 580px) { .products-grid { grid-template-columns: 1fr; } #modal-box { grid-template-columns: 1fr; } #modal-img img { min-height: 200px; } }
   </style>
+
+<style id="forza-nav-css">
+/* ── Divider between nav links and auth buttons ── */
+.nav-divider-li {
+  width: 1px;
+  height: 18px;
+  background: rgba(255,255,255,0.15);
+  margin: 0 0.6rem;
+  list-style: none;
+}
+.nav-li-auth {
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+/* SIGN IN */
+.nav-btn-signin {
+  position: relative;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #bbb;
+  text-decoration: none;
+  padding: 0.44rem 0.9rem;
+  border-radius: 3px;
+  overflow: hidden;
+  transition: color 0.25s;
+  white-space: nowrap;
+}
+.nav-btn-signin::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.06);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+  border-radius: 3px;
+}
+.nav-btn-signin::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 100%; height: 2px;
+  background: linear-gradient(90deg, #e8000d, #ff6b6b);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.nav-btn-signin:hover { color: #fff; }
+.nav-btn-signin:hover::before { transform: scaleX(1); }
+.nav-btn-signin:hover::after  { transform: scaleX(1); }
+/* REGISTER */
+.nav-btn-register {
+  position: relative;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #fff;
+  text-decoration: none;
+  padding: 0.44rem 1.1rem;
+  background: linear-gradient(135deg, #e8000d 0%, #c0000b 100%);
+  border-radius: 3px;
+  box-shadow: 0 0 12px rgba(232,0,13,0.35), inset 0 1px 0 rgba(255,255,255,0.12);
+  overflow: hidden;
+  transition: box-shadow 0.25s, transform 0.2s;
+  white-space: nowrap;
+}
+.nav-btn-register::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.22), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.5s ease;
+}
+.nav-btn-register:hover {
+  box-shadow: 0 0 22px rgba(232,0,13,0.65), 0 4px 16px rgba(232,0,13,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+  transform: translateY(-2px);
+}
+.nav-btn-register:hover::before { left: 160%; }
+/* USER DROPDOWN */
+.nav-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  padding: 0.44rem 0.9rem;
+  border: 2px solid rgba(255,255,255,0.18);
+  border-radius: 3px;
+  transition: border-color 0.2s;
+  user-select: none;
+  white-space: nowrap;
+}
+.nav-user-info:hover { border-color: var(--red); }
+.nav-chevron { font-size: 0.65rem; transition: transform 0.25s; }
+.nav-user-info.open .nav-chevron { transform: rotate(180deg); }
+.nav-user-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 200px;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-top: 3px solid var(--red);
+  border-radius: 6px;
+  padding: 0.5rem 0;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  z-index: 600;
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+.nav-user-dropdown.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.nud-item {
+  display: flex; align-items: center; gap: 0.6rem;
+  width: 100%; padding: 0.65rem 1.1rem;
+  color: #ccc; text-decoration: none;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.9rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  background: none; border: none; cursor: pointer; text-align: left;
+  transition: background 0.15s, color 0.15s;
+}
+.nud-item:hover { background: rgba(232,0,13,0.12); color: #fff; }
+.nud-signout { color: #e8000d; }
+.nud-signout:hover { background: rgba(232,0,13,0.15); color: #ff3333; }
+.nud-divider { height: 1px; background: #222; margin: 0.3rem 0; }
+</style>
 </head>
 <body>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="home.html" class="nav-logo">
+    <img src="./Images/logo.jpeg" alt="Forza Sport Logo">
+    <span>Forza Sport</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="home.html">Home</a></li>
+    <li><a href="product.html" class="active">Products</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li class="nav-divider-li"></li>
+    <li id="nav-li-guest" class="nav-li-auth">
+      <a href="login.html" class="nav-btn-signin">Sign In</a>
+    </li>
+    <li id="nav-li-register" class="nav-li-auth">
+      <a href="register.html" class="nav-btn-register">Register</a>
+    </li>
+    <li id="nav-li-user" class="nav-li-auth" style="display:none; position:relative;">
+      <div class="nav-user-info" id="nav-user-trigger">
+        <span class="nav-avatar">👤</span>
+        <span id="nav-username">User</span>
+        <span class="nav-chevron">▾</span>
+      </div>
+      <div class="nav-user-dropdown" id="nav-user-dropdown">
+        <a href="account.html" class="nud-item">👤 My Profile</a>
+        <a href="history.html" class="nud-item">📋 Order History</a>
+        <a href="cart.html"    class="nud-item">🛒 My Cart</a>
+        <div class="nud-divider"></div>
+        <button class="nud-item nud-signout" onclick="signOut()">🚪 Sign Out</button>
+      </div>
+    </li>
+  </ul>
+  <a href="cart.html" class="nav-cart-btn">
+    🛒 Cart <span class="cart-badge">0</span>
+  </a>
+</nav>
  
-<!-- SIDEBAR -->
-<aside class="sidebar">
-  <div class="sidebar-logo">
-    <div class="brand"><span>FORZA</span> SPORT</div>
-    <span class="admin-tag">Admin Dashboard</span>
+<div class="products-wrapper">
+  <section class="page-header">
+    <h1>Our Products</h1>
+    <p>Kits · Boots · Training Gear — everything your game demands</p>
+  </section>
+  <section class="category-btns">
+    <button class="cat-btn active" onclick="filterCat('all', this)">All</button>
+    <button class="cat-btn" onclick="filterCat('shoes', this)">⚡ Boots</button>
+    <button class="cat-btn" onclick="filterCat('kits', this)">👕 Kits</button>
+    <button class="cat-btn" onclick="filterCat('gadgets', this)">⚙️ Gadgets</button>
+  </section>
+  <section class="products-grid" id="products-grid">
+      <div class="product-card" data-cat="shoes">
+        <div class="product-img-wrap" data-pid="1" onclick="openModal(1)">
+          <img src="Images/black adidas cleats 1.jpeg" alt="Black Adidas Cleats" onerror="this.src='Images/logo.jpeg'">
+          <span class="cat-badge">shoes</span>
+          <span class="stock-badge plenty">In Stock</span>
+          <div class="quick-view-overlay"><span>Quick View</span></div>
+<div class="img-dots" onclick="event.stopPropagation()"><span class="img-dot active" onclick="event.stopPropagation(); switchCardImage(1, 0)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(1, 1)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(1, 2)"></span></div>
+        </div>
+        <div class="product-info">
+          <p class="p-cat">shoes</p>
+          <h3 class="p-name">Black Adidas Cleats</h3>
+          <p class="p-price">$260</p>
+          <p class="p-stock-line plenty">In Stock</p>
+          <button class="add-btn" onclick="handleAddToCart('Black Adidas Cleats',260,'shoes',this,'Images/black adidas cleats 1.jpeg')">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" data-cat="shoes">
+        <div class="product-img-wrap" data-pid="2" onclick="openModal(2)">
+          <img src="Images/black and gold adidas 1.jpeg" alt="Black &amp; Gold Adidas Cleats" onerror="this.src='Images/logo.jpeg'">
+          <span class="cat-badge">shoes</span>
+          <span class="stock-badge plenty">In Stock</span>
+          <div class="quick-view-overlay"><span>Quick View</span></div>
+<div class="img-dots" onclick="event.stopPropagation()"><span class="img-dot active" onclick="event.stopPropagation(); switchCardImage(2, 0)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(2, 1)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(2, 2)"></span></div>
+        </div>
+        <div class="product-info">
+          <p class="p-cat">shoes</p>
+          <h3 class="p-name">Black &amp; Gold Adidas Cleats</h3>
+          <p class="p-price">$275</p>
+          <p class="p-stock-line plenty">In Stock</p>
+          <button class="add-btn" onclick="handleAddToCart('Black &amp; Gold Adidas Cleats',275,'shoes',this,'Images/black and gold adidas 1.jpeg')">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" data-cat="shoes">
+        <div class="product-img-wrap" data-pid="3" onclick="openModal(3)">
+          <img src="Images/black and yellow boots 1.png" alt="Black &amp; Yellow Boots" onerror="this.src='Images/logo.jpeg'">
+          <span class="cat-badge">shoes</span>
+          <span class="stock-badge plenty">In Stock</span>
+          <div class="quick-view-overlay"><span>Quick View</span></div>
+<div class="img-dots" onclick="event.stopPropagation()"><span class="img-dot active" onclick="event.stopPropagation(); switchCardImage(3, 0)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(3, 1)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(3, 2)"></span></div>
+        </div>
+        <div class="product-info">
+          <p class="p-cat">shoes</p>
+          <h3 class="p-name">Black &amp; Yellow Boots</h3>
+          <p class="p-price">$250</p>
+          <p class="p-stock-line plenty">In Stock</p>
+          <button class="add-btn" onclick="handleAddToCart('Black &amp; Yellow Boots',250,'shoes',this,'Images/black and yellow boots 1.png')">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" data-cat="shoes">
+        <div class="product-img-wrap" data-pid="4" onclick="openModal(4)">
+          <img src="Images/black cleats 1.jpeg" alt="Black Cleats" onerror="this.src='Images/logo.jpeg'">
+          <span class="cat-badge">shoes</span>
+          <span class="stock-badge plenty">In Stock</span>
+          <div class="quick-view-overlay"><span>Quick View</span></div>
+<div class="img-dots" onclick="event.stopPropagation()"><span class="img-dot active" onclick="event.stopPropagation(); switchCardImage(4, 0)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(4, 1)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(4, 2)"></span></div>
+        </div>
+        <div class="product-info">
+          <p class="p-cat">shoes</p>
+          <h3 class="p-name">Black Cleats</h3>
+          <p class="p-price">$240</p>
+          <p class="p-stock-line plenty">In Stock</p>
+          <button class="add-btn" onclick="handleAddToCart('Black Cleats',240,'shoes',this,'Images/black cleats 1.jpeg')">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" data-cat="shoes">
+        <div class="product-img-wrap" data-pid="5" onclick="openModal(5)">
+          <img src="Images/Cyan adidas 1.jpeg" alt="Cyan Adidas Cleats" onerror="this.src='Images/logo.jpeg'">
+          <span class="cat-badge">shoes</span>
+          <span class="stock-badge plenty">In Stock</span>
+          <div class="quick-view-overlay"><span>Quick View</span></div>
+<div class="img-dots" onclick="event.stopPropagation()"><span class="img-dot active" onclick="event.stopPropagation(); switchCardImage(5, 0)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(5, 1)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(5, 2)"></span></div>
+        </div>
+        <div class="product-info">
+          <p class="p-cat">shoes</p>
+          <h3 class="p-name">Cyan Adidas Cleats</h3>
+          <p class="p-price">$265</p>
+          <p class="p-stock-line plenty">In Stock</p>
+          <button class="add-btn" onclick="handleAddToCart('Cyan Adidas Cleats',265,'shoes',this,'Images/Cyan adidas 1.jpeg')">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" data-cat="shoes">
+        <div class="product-img-wrap" data-pid="6" onclick="openModal(6)">
+          <img src="Images/cyan green cleat 1.jpeg" alt="Cyan-Green Cleats" onerror="this.src='Images/logo.jpeg'">
+          <span class="cat-badge">shoes</span>
+          <span class="stock-badge plenty">In Stock</span>
+          <div class="quick-view-overlay"><span>Quick View</span></div>
+<div class="img-dots" onclick="event.stopPropagation()"><span class="img-dot active" onclick="event.stopPropagation(); switchCardImage(6, 0)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(6, 1)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(6, 2)"></span></div>
+        </div>
+        <div class="product-info">
+          <p class="p-cat">shoes</p>
+          <h3 class="p-name">Cyan-Green Cleats</h3>
+          <p class="p-price">$260</p>
+          <p class="p-stock-line plenty">In Stock</p>
+          <button class="add-btn" onclick="handleAddToCart('Cyan-Green Cleats',260,'shoes',this,'Images/cyan green cleat 1.jpeg')">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" data-cat="shoes">
+        <div class="product-img-wrap" data-pid="7" onclick="openModal(7)">
+          <img src="Images/green cleats 1.jpeg" alt="Green Cleats" onerror="this.src='Images/logo.jpeg'">
+          <span class="cat-badge">shoes</span>
+          <span class="stock-badge plenty">In Stock</span>
+          <div class="quick-view-overlay"><span>Quick View</span></div>
+<div class="img-dots" onclick="event.stopPropagation()"><span class="img-dot active" onclick="event.stopPropagation(); switchCardImage(7, 0)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(7, 1)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(7, 2)"></span></div>
+        </div>
+        <div class="product-info">
+          <p class="p-cat">shoes</p>
+          <h3 class="p-name">Green Cleats</h3>
+          <p class="p-price">$255</p>
+          <p class="p-stock-line plenty">In Stock</p>
+          <button class="add-btn" onclick="handleAddToCart('Green Cleats',255,'shoes',this,'Images/green cleats 1.jpeg')">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" data-cat="shoes">
+        <div class="product-img-wrap" data-pid="8" onclick="openModal(8)">
+          <img src="Images/mercury cleats 1.jpg" alt="Mercury Cleats" onerror="this.src='Images/logo.jpeg'">
+          <span class="cat-badge">shoes</span>
+          <span class="stock-badge plenty">In Stock</span>
+          <div class="quick-view-overlay"><span>Quick View</span></div>
+<div class="img-dots" onclick="event.stopPropagation()"><span class="img-dot active" onclick="event.stopPropagation(); switchCardImage(8, 0)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(8, 1)"></span></div>
+        </div>
+        <div class="product-info">
+          <p class="p-cat">shoes</p>
+          <h3 class="p-name">Mercury Cleats</h3>
+          <p class="p-price">$270</p>
+          <p class="p-stock-line plenty">In Stock</p>
+          <button class="add-btn" onclick="handleAddToCart('Mercury Cleats',270,'shoes',this,'Images/mercury cleats 1.jpg')">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" data-cat="shoes">
+        <div class="product-img-wrap" data-pid="9" onclick="openModal(9)">
+          <img src="Images/pink adidas cleats 1.jpeg" alt="Pink Adidas Cleats" onerror="this.src='Images/logo.jpeg'">
+          <span class="cat-badge">shoes</span>
+          <span class="stock-badge plenty">In Stock</span>
+          <div class="quick-view-overlay"><span>Quick View</span></div>
+<div class="img-dots" onclick="event.stopPropagation()"><span class="img-dot active" onclick="event.stopPropagation(); switchCardImage(9, 0)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(9, 1)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(9, 2)"></span></div>
+        </div>
+        <div class="product-info">
+          <p class="p-cat">shoes</p>
+          <h3 class="p-name">Pink Adidas Cleats</h3>
+          <p class="p-price">$260</p>
+          <p class="p-stock-line plenty">In Stock</p>
+          <button class="add-btn" onclick="handleAddToCart('Pink Adidas Cleats',260,'shoes',this,'Images/pink adidas cleats 1.jpeg')">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" data-cat="shoes">
+        <div class="product-img-wrap" data-pid="10" onclick="openModal(10)">
+          <img src="Images/purple boots 1.png" alt="Purple Boots" onerror="this.src='Images/logo.jpeg'">
+          <span class="cat-badge">shoes</span>
+          <span class="stock-badge plenty">In Stock</span>
+          <div class="quick-view-overlay"><span>Quick View</span></div>
+<div class="img-dots" onclick="event.stopPropagation()"><span class="img-dot active" onclick="event.stopPropagation(); switchCardImage(10, 0)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(10, 1)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(10, 2)"></span></div>
+        </div>
+        <div class="product-info">
+          <p class="p-cat">shoes</p>
+          <h3 class="p-name">Purple Boots</h3>
+          <p class="p-price">$245</p>
+          <p class="p-stock-line plenty">In Stock</p>
+          <button class="add-btn" onclick="handleAddToCart('Purple Boots',245,'shoes',this,'Images/purple boots 1.png')">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" data-cat="shoes">
+        <div class="product-img-wrap" data-pid="11" onclick="openModal(11)">
+          <img src="Images/white and black adidas cleats 1.jpeg" alt="White &amp; Black Adidas Cleats" onerror="this.src='Images/logo.jpeg'">
+          <span class="cat-badge">shoes</span>
+          <span class="stock-badge plenty">In Stock</span>
+          <div class="quick-view-overlay"><span>Quick View</span></div>
+<div class="img-dots" onclick="event.stopPropagation()"><span class="img-dot active" onclick="event.stopPropagation(); switchCardImage(11, 0)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(11, 1)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(11, 2)"></span></div>
+        </div>
+        <div class="product-info">
+          <p class="p-cat">shoes</p>
+          <h3 class="p-name">White &amp; Black Adidas Cleats</h3>
+          <p class="p-price">$265</p>
+          <p class="p-stock-line plenty">In Stock</p>
+          <button class="add-btn" onclick="handleAddToCart('White &amp; Black Adidas Cleats',265,'shoes',this,'Images/white and black adidas cleats 1.jpeg')">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" data-cat="shoes">
+        <div class="product-img-wrap" data-pid="12" onclick="openModal(12)">
+          <img src="Images/White and cyan adidas cleats 1.jpeg" alt="White &amp; Cyan Adidas Cleats" onerror="this.src='Images/logo.jpeg'">
+          <span class="cat-badge">shoes</span>
+          <span class="stock-badge plenty">In Stock</span>
+          <div class="quick-view-overlay"><span>Quick View</span></div>
+<div class="img-dots" onclick="event.stopPropagation()"><span class="img-dot active" onclick="event.stopPropagation(); switchCardImage(12, 0)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(12, 1)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(12, 2)"></span></div>
+        </div>
+        <div class="product-info">
+          <p class="p-cat">shoes</p>
+          <h3 class="p-name">White &amp; Cyan Adidas Cleats</h3>
+          <p class="p-price">$265</p>
+          <p class="p-stock-line plenty">In Stock</p>
+          <button class="add-btn" onclick="handleAddToCart('White &amp; Cyan Adidas Cleats',265,'shoes',this,'Images/White and cyan adidas cleats 1.jpeg')">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" data-cat="shoes">
+        <div class="product-img-wrap" data-pid="13" onclick="openModal(13)">
+          <img src="Images/White andd blue X cleats 1.jpeg" alt="White &amp; Blue X Cleats" onerror="this.src='Images/logo.jpeg'">
+          <span class="cat-badge">shoes</span>
+          <span class="stock-badge plenty">In Stock</span>
+          <div class="quick-view-overlay"><span>Quick View</span></div>
+<div class="img-dots" onclick="event.stopPropagation()"><span class="img-dot active" onclick="event.stopPropagation(); switchCardImage(13, 0)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(13, 1)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(13, 2)"></span></div>
+        </div>
+        <div class="product-info">
+          <p class="p-cat">shoes</p>
+          <h3 class="p-name">White &amp; Blue X Cleats</h3>
+          <p class="p-price">$275</p>
+          <p class="p-stock-line plenty">In Stock</p>
+          <button class="add-btn" onclick="handleAddToCart('White &amp; Blue X Cleats',275,'shoes',this,'Images/White andd blue X cleats 1.jpeg')">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" data-cat="shoes">
+        <div class="product-img-wrap" data-pid="14" onclick="openModal(14)">
+          <img src="Images/White CR7 cleats 1.jpeg" alt="White CR7 Cleats" onerror="this.src='Images/logo.jpeg'">
+          <span class="cat-badge">shoes</span>
+          <span class="stock-badge plenty">In Stock</span>
+          <div class="quick-view-overlay"><span>Quick View</span></div>
+<div class="img-dots" onclick="event.stopPropagation()"><span class="img-dot active" onclick="event.stopPropagation(); switchCardImage(14, 0)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(14, 1)"></span><span class="img-dot" onclick="event.stopPropagation(); switchCardImage(14, 2)"></span></div>
+        </div>
+        <div class="product-info">
+          <p class="p-cat">shoes</p>
+          <h3 class="p-name">White CR7 Cleats</h3>
+          <p class="p-price">$290</p>
+          <p class="p-stock-line plenty">In Stock</p>
+          <button class="add-btn" onclick="handleAddToCart('White CR7 Cleats',290,'shoes',this,'Images/White CR7 cleats 1.jpeg')">Add to Cart</button>
+        </div>
+      </div>
+  </section>
+</div>
+ 
+<footer class="footer">
+  <div class="footer-brand">
+    <img src="./Images/logo.jpeg" alt="Forza Sport">
+    <p>Sport. Style. Energy. — Your premium online sports store in Libya.</p>
   </div>
-  <span class="nav-section-label">Overview</span>
-  <button class="nav-item active" onclick="showTab('overview', this)">
-    <span class="nav-icon">📊</span> Overview
-  </button>
-  <span class="nav-section-label">Catalog</span>
-  <button class="nav-item" onclick="showTab('products', this)">
-    <span class="nav-icon">📦</span> Products
-  </button>
-  <button class="nav-item" onclick="showTab('stock', this)">
-    <span class="nav-icon">🗃️</span> Stock Manager
-  </button>
-  <span class="nav-section-label">Sales</span>
-  <button class="nav-item" onclick="showTab('orders', this)">
-    <span class="nav-icon">🧾</span> Orders
-  </button>
-  <div class="sidebar-bottom">
-    <a href="home.html" class="back-to-site">← Back to Site</a>
+  <div class="footer-links">
+    <h4>Quick Links</h4>
+    <ul>
+      <li><a href="home.html">Home</a></li>
+      <li><a href="cart.html">Cart</a></li>
+      <li><a href="checkout.html">Checkout</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
   </div>
-</aside>
+  <div class="footer-social">
+    <h4>Contact</h4>
+    <ul>
+      <li><a href="mailto:ForzaSportInfo@gmail.com">ForzaSportInfo@gmail.com</a></li>
+      <li><a href="#">📍 Benghazi, Libya</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom"><p>&copy; 2026 Forza Sport E‑Store. All rights reserved.</p></div>
  
-<!-- MAIN -->
-<div class="main">
-  <header class="topbar">
-    <div class="topbar-title">Forza Sport <span>Admin</span></div>
-    <div class="topbar-right">
-      <span class="admin-badge">⚡ Admin Mode</span>
-    </div>
-  </header>
- 
-  <div class="content">
- 
-    <!-- ===== OVERVIEW TAB ===== -->
-    <div class="tab-panel active" id="tab-overview">
-      <div class="stats-grid" id="stats-grid"></div>
- 
-      <div class="section-header">
-        <div class="section-title">Product Inventory</div>
-        <button class="btn btn-red" onclick="showTab('products', document.querySelector('.nav-item:nth-child(4)'))">Manage Products →</button>
-      </div>
-      <div class="product-dash-grid" id="overview-product-grid"></div>
-    </div>
- 
-    <!-- ===== PRODUCTS TAB ===== -->
-    <div class="tab-panel" id="tab-products">
-      <div class="section-header">
-        <div class="section-title">All Products</div>
-        <button class="btn btn-red" onclick="openAddModal()">+ Add Product</button>
-      </div>
-      <div class="search-bar">
-        <input type="text" class="search-input" placeholder="Search products..." oninput="filterProducts(this.value)" id="product-search">
-        <select class="filter-select" onchange="filterProductsCat(this.value)">
-          <option value="all">All Categories</option>
-          <option value="shoes">Boots</option>
-          <option value="kits">Kits</option>
-          <option value="gadgets">Gadgets</option>
-        </select>
-      </div>
-      <div class="table-wrap">
-        <table id="products-table">
-          <thead>
-            <tr>
-              <th>Image</th>
-              <th>Product Name</th>
-              <th>Category</th>
-              <th>Price</th>
-              <th>Total Stock</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="products-tbody"></tbody>
-        </table>
-      </div>
-    </div>
- 
-    <!-- ===== STOCK TAB ===== -->
-    <div class="tab-panel" id="tab-stock">
-      <div class="section-header">
-        <div class="section-title">Stock Manager</div>
-        <button class="btn btn-green" onclick="saveAllStock()">💾 Save All Stock</button>
-      </div>
-      <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1.5rem;">Edit quantities per size. Shoes use EU sizes (38–47), kits use shirt sizes, gadgets have a single quantity.</p>
-      <div id="stock-manager-list"></div>
-    </div>
- 
-    <!-- ===== ORDERS TAB ===== -->
-    <div class="tab-panel" id="tab-orders">
-      <div class="section-header">
-        <div class="section-title">Order History</div>
-        <button class="btn btn-ghost" onclick="clearOrderHistory()">🗑 Clear History</button>
-      </div>
-      <div class="search-bar">
-        <input type="text" class="search-input" placeholder="Search by name or order #..." oninput="filterOrders(this.value)" id="order-search">
-        <select class="filter-select" onchange="filterOrdersStatus(this.value)">
-          <option value="all">All Statuses</option>
-          <option value="Pending approval">Pending Approval</option>
-          <option value="Confirmed">Confirmed</option>
-          <option value="Processing">Processing</option>
-          <option value="Shipped">Shipped</option>
-          <option value="Delivered">Delivered</option>
-          <option value="Cancelled">Cancelled</option>
-        </select>
-      </div>
-      <div class="table-wrap">
-        <table id="orders-table">
-          <thead>
-            <tr>
-              <th>Order #</th>
-              <th>Customer</th>
-              <th>Items</th>
-              <th>Total</th>
-              <th>Payment</th>
-              <th>Status</th>
-              <th>Date</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="orders-tbody"></tbody>
-        </table>
-      </div>
-    </div>
- 
-  </div><!-- /content -->
-</div><!-- /main -->
- 
-<!-- ADD / EDIT PRODUCT MODAL -->
-<div class="modal-bg" id="product-modal">
-  <div class="modal-box">
-    <button class="modal-close-btn" onclick="closeModal()">✕</button>
-    <div class="modal-title" id="modal-title">Add Product</div>
-    <p class="modal-sub" id="modal-sub">Fill in the details below to add a new product to the store.</p>
-    <div class="form-group">
-      <label class="form-label">Product Name</label>
-      <input class="form-input" id="f-name" placeholder="e.g. Adidas Copa Cleats">
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Price (LYD)</label>
-        <input class="form-input" id="f-price" type="number" min="0" placeholder="1499">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Category</label>
-        <select class="form-select" id="f-cat">
-          <option value="shoes">Boots / Shoes</option>
-          <option value="kits">Kits / Jerseys</option>
-          <option value="gadgets">Gadgets / Training</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Image URL or Path</label>
-      <input class="form-input" id="f-img" placeholder="Images/myproduct.jpeg" oninput="previewImg(this.value)">
-      <div style="display:flex;align-items:center;gap:0.6rem;margin-top:0.5rem;">
-        <input type="file" id="f-img-file" accept="image/png,image/jpeg,image/webp,image/gif" style="display:none" onchange="uploadProductImage(this)">
-        <button type="button" class="btn btn-ghost btn-sm" onclick="document.getElementById('f-img-file').click()">📤 Upload Photo</button>
-        <span id="upload-status" style="font-size:0.78rem;color:var(--muted)"></span>
-      </div>
-      <div class="img-preview-wrap" id="img-preview-wrap">
-        <img id="img-preview" src="" alt="preview">
-        <span class="img-preview-placeholder" id="img-preview-placeholder">📷 Image preview</span>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Description</label>
-      <textarea class="form-textarea" id="f-desc" placeholder="Product description..."></textarea>
-    </div>
-    <div class="form-actions">
-      <button class="btn btn-red" onclick="saveProduct()" id="save-btn">Save Product</button>
-      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
-    </div>
+<!-- PRODUCT DETAIL MODAL -->
+<div id="modal-overlay">
+  <div id="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modal-img"></div>
+    <div id="modal-info"></div>
   </div>
 </div>
  
-<!-- DELETE CONFIRM MODAL -->
-<div class="modal-bg" id="delete-modal">
-  <div class="confirm-box">
-    <h3>Delete Product?</h3>
-    <p id="delete-msg">This will permanently remove the product from your store.</p>
-    <div class="confirm-actions">
-      <button class="btn btn-red" onclick="confirmDelete()">Yes, Delete</button>
-      <button class="btn btn-ghost" onclick="closeDeleteModal()">Cancel</button>
-    </div>
+<!-- SIZE PICKER MODAL -->
+<div id="size-overlay">
+  <div id="size-box">
+    <button class="size-close" onclick="closeSizePicker()">✕</button>
+    <h3 id="size-title">Select Size</h3>
+    <p id="size-subtitle">Choose your size before adding to cart</p>
+    <div class="size-grid" id="size-grid"></div>
+    <button class="size-confirm-btn" id="size-confirm-btn" onclick="confirmSize()">🛒 Add to Cart</button>
+    <p class="size-required-msg" id="size-required-msg"></p>
   </div>
 </div>
- 
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
  
 <script src="forza-store.js"></script>
+<script src="cart.js"></script>
 <script>
-// ===== ADMIN KEY (needed to save/delete/upload products) =====
-const ADMIN_KEY = new URLSearchParams(location.search).get('key') || '';
-if (window.ForzaStore.isFileProtocol) window.ForzaStore.showOfflineBanner();
-
-// ===== DATA KEYS =====
-const PRODUCTS_KEY    = 'forza_dash_products';
-const SIZE_STOCK_KEY  = 'forza_stock_v2';
-const HISTORY_KEY     = 'forza_history';
- 
+let PRODUCTS = window.ForzaStore.getLocalProducts();
 const SHOE_SIZES  = ['38','39','40','41','42','43','44','45','46','47'];
 const SHIRT_SIZES = ['XS','S','M','L','XL','XXL','3XL'];
  
-// ===== DEFAULT PRODUCTS =====
-const DEFAULT_PRODUCTS = window.ForzaStore.DEFAULT_PRODUCTS;
-// ===== HELPERS =====
-function getProducts() { return window.ForzaStore.getLocalProducts(); }
-// Customer-supplied text (order name, notes, etc.) is untrusted and gets
-// inserted into this page via innerHTML — escape it first so a malicious
-// order can't run script in the admin's browser (stored XSS).
-function escapeHtml(str) {
-  return String(str ?? '').replace(/[&<>"']/g, c => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-  }[c]));
-}
-async function saveProducts(arr) { return window.ForzaStore.saveProducts(arr, ADMIN_KEY); }
-async function syncProducts() {
-  try {
-    await window.ForzaStore.loadProducts();
-    return true;
-  } catch (e) {
-    showToast('⚠ Could not reach the server — showing last known products.');
-    return false;
-  }
-}
+// Stock key per size: "Pro High-Top Cleats::42"
+// For gadgets: "Football Kick Trainer"
+// (SIZE_STOCK_KEY itself is already declared globally by cart.js — reusing it here.)
+ 
 function getStockV2() {
   try { return JSON.parse(localStorage.getItem(SIZE_STOCK_KEY)) || {}; }
   catch { return {}; }
 }
 function saveStockV2(s) { localStorage.setItem(SIZE_STOCK_KEY, JSON.stringify(s)); }
-function getSizeStock(name, size) {
+ 
+function getSizeStock(productName, size) {
   const s = getStockV2();
-  const key = size ? `${name}::${size}` : name;
-  return s[key] !== undefined ? s[key] : 10;
+  const key = size ? `${productName}::${size}` : productName;
+  return s[key] !== undefined ? s[key] : 10; // default 10
 }
-function setSizeStock(name, size, qty) {
+ 
+function setSizeStock(productName, size, qty) {
   const s = getStockV2();
-  const key = size ? `${name}::${size}` : name;
+  const key = size ? `${productName}::${size}` : productName;
   s[key] = qty;
   saveStockV2(s);
 }
-function getTotalStock(name, cat) {
-  if (cat === 'gadgets') return getSizeStock(name, null);
+ 
+function getTotalStock(productName, cat) {
+  if (cat === 'gadgets') return getSizeStock(productName, null);
   const sizes = cat === 'shoes' ? SHOE_SIZES : SHIRT_SIZES;
-  return sizes.reduce((sum, sz) => sum + getSizeStock(name, sz), 0);
+  return sizes.reduce((sum, sz) => sum + getSizeStock(productName, sz), 0);
 }
-// ===== ORDERS (server-backed — data/orders.json via /api/orders) =====
-let _ordersCache = [];
-async function loadOrders() {
-  try {
-    const res = await fetch('/api/orders?key=' + encodeURIComponent(ADMIN_KEY));
-    if (!res.ok) {
-      showToast('⚠ Could not load orders — check your admin key.');
-      return _ordersCache;
-    }
-    const data = await res.json();
-    _ordersCache = data.orders || [];
-    return _ordersCache;
-  } catch (e) {
-    showToast('⚠ Could not reach the server — showing last known orders.');
-    return _ordersCache;
-  }
-}
-// Kept for any code that still expects the old localStorage-shaped history;
-// now backed by the server cache instead.
-function getHistory() { return _ordersCache; }
-function stockLabel(qty) {
+ 
+function getStockLabel(qty) {
   if (qty <= 0)  return { cls: 'out',      text: 'Out of Stock' };
-  if (qty <= 5)  return { cls: 'critical', text: `${qty} left — Critical` };
-  if (qty <= 15) return { cls: 'low',      text: `${qty} left — Low` };
+  if (qty <= 3)  return { cls: 'critical', text: `Only ${qty} left!` };
+  if (qty <= 6)  return { cls: 'low',      text: `${qty} left` };
   return { cls: 'plenty', text: `In Stock (${qty})` };
 }
-function catLabel(cat) {
-  return { shoes: 'Boots', kits: 'Kits', gadgets: 'Gadgets' }[cat] || cat;
+ 
+const grid = document.getElementById('products-grid');
+
+// Returns a product's photo list — falls back to its single "img" field
+// for any product that doesn't (yet) have an "images" array.
+function galleryFor(p) {
+  return (p.images && p.images.length) ? p.images : [p.img];
 }
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(t._timer);
-  t._timer = setTimeout(() => t.classList.remove('show'), 2800);
-}
- 
-// ===== TAB SWITCHER =====
-function showTab(name, btn) {
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  if (btn) btn.classList.add('active');
-  if (name === 'overview')  syncProducts().then(renderOverview);
-  if (name === 'products')  syncProducts().then(renderProductsTable);
-  if (name === 'stock')     syncProducts().then(() => window.ForzaStore.loadStock()).then(renderStockManager);
-  if (name === 'orders')    renderOrders();
-}
- 
-// ===== OVERVIEW =====
-async function renderOverview() {
-  const products = getProducts();
-  const history  = await loadOrders();
-  const totalRevenue = history.reduce((s, o) => s + (Number(o.total) || 0), 0);
-  const outOfStock   = products.filter(p => getTotalStock(p.name, p.cat) <= 0).length;
-  const lowStock     = products.filter(p => { const q = getTotalStock(p.name, p.cat); return q > 0 && q <= 5; }).length;
- 
-  document.getElementById('stats-grid').innerHTML = `
-    <div class="stat-card">
-      <div class="stat-label">Total Products</div>
-      <div class="stat-value">${products.length}</div>
-      <div class="stat-sub">In catalog</div>
-    </div>
-    <div class="stat-card green">
-      <div class="stat-label">Total Revenue</div>
-      <div class="stat-value green">${ForzaStore.formatMoney(totalRevenue)}</div>
-      <div class="stat-sub">From ${history.length} orders</div>
-    </div>
-    <div class="stat-card orange">
-      <div class="stat-label">Low Stock</div>
-      <div class="stat-value orange">${lowStock}</div>
-      <div class="stat-sub">Products running low</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Out of Stock</div>
-      <div class="stat-value red">${outOfStock}</div>
-      <div class="stat-sub">Need restocking</div>
-    </div>
-  `;
- 
-  const grid = document.getElementById('overview-product-grid');
-  grid.innerHTML = products.map(p => {
+
+function renderProducts(products) {
+  grid.innerHTML = '';
+  products.forEach(p => {
     const qty = getTotalStock(p.name, p.cat);
-    const sl  = stockLabel(qty);
-    return `
-      <div class="product-dash-card">
-        <img class="product-dash-img" src="${p.img}" alt="${p.name}" onerror="this.src='Images/logo.jpeg'">
-        <div class="product-dash-body">
-          <div class="product-dash-cat">${catLabel(p.cat)}</div>
-          <div class="product-dash-name">${p.name}</div>
-          <div class="product-dash-price">${ForzaStore.formatMoney(p.price)}</div>
-          <span class="stock-pill ${sl.cls}">${sl.text}</span>
-          <div class="product-dash-actions">
-            <button class="btn btn-ghost btn-sm" onclick="openEditModal(${p.id})">✏️ Edit</button>
-            <button class="btn btn-ghost btn-sm" onclick="navigateToStock()">📦 Stock</button>
+    const sl  = getStockLabel(qty);
+    const out = qty <= 0;
+    const imgs = galleryFor(p);
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    card.dataset.cat = p.cat;
+    card.innerHTML = `
+      <div class="product-img-wrap" data-pid="${p.id}" onclick="openModal(${p.id})">
+        <img src="${imgs[0]}" alt="${p.name}" onerror="this.src='Images/logo.jpeg'">
+        <span class="cat-badge">${p.cat}</span>
+        <span class="stock-badge ${sl.cls}">${sl.text}</span>
+        <div class="quick-view-overlay"><span>Quick View</span></div>
+        ${imgs.length > 1 ? `
+          <div class="img-dots" onclick="event.stopPropagation()">
+            ${imgs.map((im, i) => `<span class="img-dot ${i === 0 ? 'active' : ''}" onclick="event.stopPropagation(); switchCardImage(${p.id}, ${i})"></span>`).join('')}
           </div>
-        </div>
-      </div>`;
-  }).join('');
-}
- 
-function navigateToStock() {
-  const btn = document.querySelectorAll('.nav-item')[3];
-  showTab('stock', btn);
-}
- 
-// ===== PRODUCTS TABLE =====
-let _filterText = '';
-let _filterCat  = 'all';
- 
-function renderProductsTable() {
-  const products = getProducts();
-  const tbody = document.getElementById('products-tbody');
-  const filtered = products.filter(p => {
-    const matchText = p.name.toLowerCase().includes(_filterText.toLowerCase());
-    const matchCat  = _filterCat === 'all' || p.cat === _filterCat;
-    return matchText && matchCat;
+        ` : ''}
+      </div>
+      <div class="product-info">
+        <p class="p-cat">${p.cat}</p>
+        <h3 class="p-name">${p.name}</h3>
+        <p class="p-price">${ForzaStore.formatMoney(p.price)}</p>
+        <p class="p-stock-line ${sl.cls}">${sl.text}</p>
+        <button class="add-btn" onclick="handleAddToCart('${p.name}',${p.price},'${p.cat}',this,'${p.img}')" ${out ? 'disabled' : ''}>${out ? '✕ Out of Stock' : 'Add to Cart'}</button>
+      </div>
+    `;
+    grid.appendChild(card);
   });
+}
+
+// Flips a product card's thumbnail to the tapped/clicked dot's photo.
+function switchCardImage(pid, idx) {
+  const p = PRODUCTS.find(x => x.id === pid);
+  if (!p) return;
+  const imgs = galleryFor(p);
+  const wrap = document.querySelector(`.product-img-wrap[data-pid="${pid}"]`);
+  if (!wrap) return;
+  const img = wrap.querySelector('img');
+  if (img) img.src = imgs[idx];
+  wrap.querySelectorAll('.img-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+}
  
-  if (!filtered.length) {
-    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">📭</div><p>No products found.</p></div></td></tr>`;
+async function initProductsPage() {
+  if (window.ForzaStore.isFileProtocol) window.ForzaStore.showOfflineBanner();
+  // Refresh the shared stock cache from the server first — cart.js's stock
+  // functions read this same localStorage cache synchronously, so loading
+  // it here means accurate "In Stock" numbers everywhere on this page,
+  // not just whatever the admin's own browser last saw.
+  try { await window.ForzaStore.loadStock(); } catch (e) { /* falls back to cached/default stock */ }
+  // Products are already visible from server-rendered HTML (see products-grid below) —
+  // this fetch just refreshes stock/pricing in the background and re-renders only if it succeeds,
+  // so a slow or failed request never leaves the page looking empty.
+  try {
+    const fresh = await window.ForzaStore.loadProducts();
+    if (fresh && fresh.length) {
+      PRODUCTS = fresh;
+      renderProducts(PRODUCTS);
+    }
+  } catch (e) {
+    console.warn('Live product refresh failed, keeping server-rendered products.', e);
+  }
+  const urlCat = new URLSearchParams(location.search).get('cat');
+if (urlCat) {
+    filterCat(urlCat, null);
+    document.querySelectorAll('.cat-btn').forEach(b => {
+      if (b.textContent.toLowerCase().includes(urlCat)) b.classList.add('active');
+      else b.classList.remove('active');
+    });
+  }
+}
+document.addEventListener('DOMContentLoaded', initProductsPage);
+
+function filterCat(cat, btn) {
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  document.querySelectorAll('.product-card').forEach(c => {
+    c.classList.toggle('hidden', cat !== 'all' && c.dataset.cat !== cat);
+  });
+}
+ 
+let _modalImgs = [];
+let _modalIdx = 0;
+
+function openModal(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  if (!p) return;
+  const qty = getTotalStock(p.name, p.cat);
+  const sl  = getStockLabel(qty);
+  const out = qty <= 0;
+  _modalImgs = galleryFor(p);
+  _modalIdx = 0;
+  renderModalImage();
+  document.getElementById('modal-info').innerHTML = `
+    <p class="modal-cat">${p.cat}</p>
+    <h2 class="modal-name">${p.name}</h2>
+    <p class="modal-price">${ForzaStore.formatMoney(p.price)}</p>
+    <p class="modal-desc">${p.desc}</p>
+    <p class="modal-stock ${sl.cls}">📦 ${sl.text}</p>
+    <hr class="modal-hr">
+    <button class="modal-add-btn" onclick="handleAddToCart('${p.name}',${p.price},'${p.cat}',this,'${p.img}')" ${out ? 'disabled' : ''}>${out ? '✕ Out of Stock' : '🛒 Add to Cart'}</button>
+    <a href="cart.html" class="modal-cart-link">View Cart & Checkout →</a>
+  `;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+// Renders the modal's current photo plus arrows/dots when there's more than one.
+function renderModalImage() {
+  const wrap = document.getElementById('modal-img');
+  const multi = _modalImgs.length > 1;
+  wrap.innerHTML = `
+    <img src="${_modalImgs[_modalIdx]}" alt="" onerror="this.src='Images/logo.jpeg'">
+    ${multi ? `
+      <button class="modal-nav modal-nav-prev" onclick="modalNav(-1)">‹</button>
+      <button class="modal-nav modal-nav-next" onclick="modalNav(1)">›</button>
+      <div class="modal-dots">
+        ${_modalImgs.map((im, i) => `<span class="img-dot ${i === _modalIdx ? 'active' : ''}" onclick="modalGoTo(${i})"></span>`).join('')}
+      </div>
+    ` : ''}
+  `;
+}
+
+function modalNav(dir) {
+  _modalIdx = (_modalIdx + dir + _modalImgs.length) % _modalImgs.length;
+  renderModalImage();
+}
+function modalGoTo(i) { _modalIdx = i; renderModalImage(); }
+
+function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+ 
+// SIZE PICKER
+let _pendingName, _pendingPrice, _pendingCat, _pendingBtn, _pendingImg, _selectedSize;
+ 
+function handleAddToCart(name, price, cat, btn, img) {
+  if (cat === 'shoes' || cat === 'kits') {
+    openSizePicker(name, price, cat, btn, img);
+  } else {
+    // gadgets — just check stock; it only decreases once a purchase is completed
+    const qty = getSizeStock(name, null);
+    if (qty <= 0) { showToast('⚠ Out of stock!'); return; }
+    addToCart(name, price, cat, btn, img);
+  }
+}
+ 
+function openSizePicker(name, price, cat, btn, img) {
+  _pendingName = name; _pendingPrice = price; _pendingCat = cat; _pendingBtn = btn; _pendingImg = img;
+  _selectedSize = null;
+  const isShoe = cat === 'shoes';
+  document.getElementById('size-title').textContent = isShoe ? '👟 Select Shoe Size' : '👕 Select Shirt Size';
+  document.getElementById('size-subtitle').textContent = isShoe
+    ? 'EU sizes — stock shown per size'
+    : 'Stock shown per size';
+  const sizes = isShoe ? SHOE_SIZES : SHIRT_SIZES;
+  const cols  = isShoe ? 5 : 4;
+  document.getElementById('size-grid').style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+ 
+  document.getElementById('size-grid').innerHTML = sizes.map(s => {
+    const qty = getSizeStock(name, s);
+    let stockClass = '';
+    let stockText  = '';
+    let disabled   = '';
+    if (qty <= 0)      { stockClass = 'out-of-stock';    stockText = 'Out';          disabled = 'disabled'; }
+    else if (qty <= 3) { stockClass = 'critical-stock';  stockText = `${qty} left`; }
+    else if (qty <= 6) { stockClass = 'low-stock';       stockText = `${qty} left`; }
+    else               { stockText = `${qty} in stock`; }
+    return `<button class="size-btn ${stockClass}" onclick="selectSize(this,'${s}')" ${disabled}>
+      <span>${s}</span>
+      <span class="size-stock-hint">${stockText}</span>
+    </button>`;
+  }).join('');
+ 
+  document.getElementById('size-confirm-btn').classList.remove('ready');
+  document.getElementById('size-required-msg').textContent = '';
+  document.getElementById('size-overlay').classList.add('open');
+}
+ 
+function selectSize(el, size) {
+  if (el.disabled) return;
+  document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  _selectedSize = size;
+  document.getElementById('size-confirm-btn').classList.add('ready');
+  document.getElementById('size-required-msg').textContent = '';
+}
+ 
+function confirmSize() {
+  if (!_selectedSize) {
+    const btn = document.getElementById('size-confirm-btn');
+    document.getElementById('size-required-msg').textContent = '⚠ Please select a size first';
+    btn.classList.remove('shake');
+    void btn.offsetWidth;
+    btn.classList.add('shake');
     return;
   }
- 
-  tbody.innerHTML = filtered.map(p => {
-    const qty = getTotalStock(p.name, p.cat);
-    const sl  = stockLabel(qty);
-    return `<tr>
-      <td><img class="td-img" src="${p.img}" alt="${p.name}" onerror="this.src='Images/logo.jpeg'"></td>
-      <td><span class="td-name">${p.name}</span></td>
-      <td><span class="stock-pill plenty" style="background:rgba(232,0,13,0.15);color:var(--red)">${catLabel(p.cat)}</span></td>
-      <td class="td-price">${ForzaStore.formatMoney(p.price)}</td>
-      <td>${qty}</td>
-      <td><span class="stock-pill ${sl.cls}">${sl.text}</span></td>
-      <td>
-        <div class="td-actions">
-          <button class="btn btn-ghost btn-sm" onclick="openEditModal(${p.id})">✏️ Edit</button>
-          <button class="btn btn-sm" style="background:rgba(232,0,13,0.15);color:#e8000d;border:1px solid rgba(232,0,13,0.3);" onclick="openDeleteModal(${p.id})">🗑 Delete</button>
-        </div>
-      </td>
-    </tr>`;
-  }).join('');
+  const qty = getSizeStock(_pendingName, _selectedSize);
+  if (qty <= 0) { showToast('⚠ That size is out of stock!'); return; }
+  const displayName = `${_pendingName} (${_selectedSize})`;
+  addToCart(displayName, _pendingPrice, _pendingCat, _pendingBtn, _pendingImg);
+  closeSizePicker();
 }
  
-function filterProducts(val) {
-  _filterText = val;
-  renderProductsTable();
-}
-function filterProductsCat(val) {
-  _filterCat = val;
-  renderProductsTable();
-}
+function closeSizePicker() { document.getElementById('size-overlay').classList.remove('open'); }
+document.getElementById('size-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('size-overlay')) closeSizePicker();
+});
  
-// ===== STOCK MANAGER =====
-function renderStockManager() {
-  const products = getProducts();
-  const list = document.getElementById('stock-manager-list');
-  list.innerHTML = products.map(p => {
+// STOCK ADMIN — per size
+function openStockAdmin() {
+  const list = document.getElementById('stock-admin-list');
+  list.innerHTML = PRODUCTS.map(p => {
     const sizes = p.cat === 'gadgets' ? [null] : (p.cat === 'shoes' ? SHOE_SIZES : SHIRT_SIZES);
-    const inputs = sizes.map(s => {
+    const sizeInputs = sizes.map(s => {
       const qty = getSizeStock(p.name, s);
-      return `<div class="size-input-item">
-        <span class="size-input-label">${s || 'Qty'}</span>
-        <input class="size-input-field ${qty === 0 ? 'zero' : ''}" type="number" min="0" max="999"
-          id="sm_${p.id}_${s || 'qty'}" value="${qty}"
-          oninput="this.className='size-input-field'+(parseInt(this.value)===0?' zero':'')">
+      const label = s || 'Qty';
+      return `<div class="stock-size-item">
+        <span class="stock-size-label">${label}</span>
+        <input class="stock-input" type="number" min="0" max="999" id="sa_${p.id}_${s || 'qty'}" value="${qty}">
       </div>`;
     }).join('');
-    return `<div class="stock-product-row">
-      <div class="stock-product-name">
-        <img src="${p.img}" onerror="this.src='Images/logo.jpeg'" style="width:36px;height:36px;object-fit:cover;border-radius:4px;">
-        ${p.name} <span class="stock-cat-pill">${catLabel(p.cat)}</span>
-      </div>
-      <div class="size-inputs">${inputs}</div>
+    return `<div class="admin-product-section">
+      <div class="admin-product-title">${p.name}</div>
+      <div class="stock-size-grid">${sizeInputs}</div>
     </div>`;
   }).join('');
+  document.getElementById('stock-admin-panel').classList.add('open');
 }
  
-async function saveAllStock() {
-  const products = getProducts();
-  const stock = getStockV2(); // start from current cache, then overwrite with the form's values
-  products.forEach(p => {
+function saveStockAdmin() {
+  PRODUCTS.forEach(p => {
     const sizes = p.cat === 'gadgets' ? [null] : (p.cat === 'shoes' ? SHOE_SIZES : SHIRT_SIZES);
     sizes.forEach(s => {
-      const el = document.getElementById(`sm_${p.id}_${s || 'qty'}`);
-      if (el) {
-        const key = s ? `${p.name}::${s}` : p.name;
-        stock[key] = parseInt(el.value) || 0;
-      }
+      const el = document.getElementById(`sa_${p.id}_${s || 'qty'}`);
+      if (el) setSizeStock(p.name, s, parseInt(el.value) || 0);
     });
   });
+  closeStockAdmin();
+  renderProducts(PRODUCTS);
+  showToast('✓ Stock levels saved!');
+}
+ 
+function closeStockAdmin() { document.getElementById('stock-admin-panel').classList.remove('open'); }
+</script>
 
-  const result = await window.ForzaStore.saveStock(stock, ADMIN_KEY);
-  if (result && result.saved === 'server') {
-    showToast('✅ Stock levels saved!');
-  } else {
-    showToast('⚠️ Could not reach the server — stock NOT saved. Check your connection and admin key, then try again.');
-  }
-}
- 
-// ===== ORDERS =====
-let _orderFilterText   = '';
-let _orderFilterStatus = 'all';
- 
-async function renderOrders() {
-  const tbody = document.getElementById('orders-tbody');
-  tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">⏳</div><p>Loading orders…</p></div></td></tr>`;
-  const history = await loadOrders();
 
-  const filtered = history.filter(o => {
-    const name = ((o.fname || '') + ' ' + (o.lname || '')).toLowerCase();
-    const num  = (o.orderNum || '').toLowerCase();
-    const matchText   = name.includes(_orderFilterText.toLowerCase()) || num.includes(_orderFilterText.toLowerCase());
-    const matchStatus = _orderFilterStatus === 'all' || o.status === _orderFilterStatus;
-    return matchText && matchStatus;
-  });
- 
-  if (!filtered.length) {
-    tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">🧾</div><p>No orders yet.</p></div></td></tr>`;
-    return;
-  }
- 
-  tbody.innerHTML = filtered.map((o) => {
-    const items  = (o.items || []).map(it => `${escapeHtml(it.name)} ×${Number(it.qty) || 0}`).join(', ');
-    const status = o.status || 'Pending approval';
-    const payLabel = o.payment === 'cod' ? '💵 COD' : o.payment === 'transfer' ? '🏦 Transfer' : '💳 Card';
-    const date = o.createdAt ? new Date(o.createdAt).toLocaleDateString('en-GB') : '—';
-    const safeOrderNum = (o.orderNum || '').replace(/'/g, "\\'");
-    return `<tr>
-      <td style="color:var(--red);font-weight:700;font-family:'Barlow Condensed',sans-serif">${escapeHtml(o.orderNum || '—')}</td>
-      <td>${escapeHtml(o.fname || '')} ${escapeHtml(o.lname || '')}</td>
-      <td style="font-size:0.8rem;max-width:180px;color:#bbb;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${items}</td>
-      <td style="color:#fff;font-weight:700">${ForzaStore.formatMoney(Number(o.total || 0))}</td>
-      <td>${payLabel}</td>
-      <td>
-        <select class="filter-select" style="font-size:0.72rem;padding:0.25rem 0.5rem;" onchange="updateOrderStatus('${safeOrderNum}', this.value)">
-          ${['Pending approval','Confirmed','Processing','Shipped','Delivered','Cancelled'].map(s =>
-            `<option value="${s}" ${s===status?'selected':''}>${s}</option>`
-          ).join('')}
-        </select>
-      </td>
-      <td style="color:var(--muted);font-size:0.8rem">${date}</td>
-      <td>
-        <button class="btn btn-sm" style="background:rgba(232,0,13,0.15);color:#e8000d;border:1px solid rgba(232,0,13,0.3);" onclick="deleteOrder('${safeOrderNum}')">🗑</button>
-      </td>
-    </tr>`;
-  }).join('');
-}
- 
-function filterOrders(val) {
-  _orderFilterText = val;
-  renderOrders();
-}
-function filterOrdersStatus(val) {
-  _orderFilterStatus = val;
-  renderOrders();
-}
-async function updateOrderStatus(orderNum, status) {
-  try {
-    const res = await fetch('/api/orders/' + encodeURIComponent(orderNum) + '?key=' + encodeURIComponent(ADMIN_KEY), {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status })
-    });
-    if (!res.ok) { showToast('⚠ Could not update order status.'); return; }
-    showToast(`✅ Order updated to "${status}"`);
-    renderOrders();
-  } catch (e) {
-    showToast('⚠ Network error updating order.');
-  }
-}
-async function deleteOrder(orderNum) {
-  if (!confirm(`Delete order ${orderNum}? This cannot be undone.`)) return;
-  try {
-    const res = await fetch('/api/orders/' + encodeURIComponent(orderNum) + '?key=' + encodeURIComponent(ADMIN_KEY), {
-      method: 'DELETE'
-    });
-    if (!res.ok) { showToast('⚠ Could not delete order.'); return; }
-    showToast('🗑 Order removed');
-    renderOrders();
-  } catch (e) {
-    showToast('⚠ Network error deleting order.');
-  }
-}
-async function clearOrderHistory() {
-  if (!confirm('Clear ALL orders? This cannot be undone.')) return;
-  try {
-    const res = await fetch('/api/orders?key=' + encodeURIComponent(ADMIN_KEY), { method: 'DELETE' });
-    if (!res.ok) { showToast('⚠ Could not clear orders.'); return; }
-    showToast('🗑 Order history cleared');
-    renderOrders();
-  } catch (e) {
-    showToast('⚠ Network error clearing orders.');
-  }
-}
- 
-// ===== ADD / EDIT MODAL =====
-let _editingId = null;
- 
-function openAddModal() {
-  _editingId = null;
-  document.getElementById('modal-title').textContent = 'Add Product';
-  document.getElementById('modal-sub').textContent   = 'Fill in the details to add a new product to the store.';
-  document.getElementById('save-btn').textContent    = 'Save Product';
-  document.getElementById('f-name').value  = '';
-  document.getElementById('f-price').value = '';
-  document.getElementById('f-cat').value   = 'shoes';
-  document.getElementById('f-img').value   = '';
-  document.getElementById('f-desc').value  = '';
-  document.getElementById('upload-status').textContent = '';
-  resetImgPreview();
-  document.getElementById('product-modal').classList.add('open');
-}
- 
-function openEditModal(id) {
-  const products = getProducts();
-  const p = products.find(x => x.id === id);
-  if (!p) return;
-  _editingId = id;
-  document.getElementById('modal-title').textContent = 'Edit Product';
-  document.getElementById('modal-sub').textContent   = 'Update the product details below.';
-  document.getElementById('save-btn').textContent    = 'Update Product';
-  document.getElementById('f-name').value  = p.name;
-  document.getElementById('f-price').value = p.price;
-  document.getElementById('f-cat').value   = p.cat;
-  document.getElementById('f-img').value   = p.img;
-  document.getElementById('f-desc').value  = p.desc || '';
-  document.getElementById('upload-status').textContent = '';
-  previewImg(p.img);
-  document.getElementById('product-modal').classList.add('open');
-}
- 
-function closeModal() {
-  document.getElementById('product-modal').classList.remove('open');
-}
- 
-async function saveProduct() {
-  const name  = document.getElementById('f-name').value.trim();
-  const price = parseInt(document.getElementById('f-price').value);
-  const cat   = document.getElementById('f-cat').value;
-  const img   = document.getElementById('f-img').value.trim();
-  const desc  = document.getElementById('f-desc').value.trim();
- 
-  if (!name || !price || !img) {
-    showToast('⚠ Please fill in Name, Price, and Image.');
-    return;
-  }
- 
-  const products = getProducts();
-  const isNew = !_editingId;
-  if (_editingId) {
-    const idx = products.findIndex(p => p.id === _editingId);
-    if (idx > -1) {
-      products[idx] = { ...products[idx], name, price, cat, img, desc };
+
+<script>
+(function() {
+  window.updateAuthNav = updateAuthNav;
+  function updateAuthNav() {
+    var guestEl = document.getElementById('nav-li-guest');
+    var regEl   = document.getElementById('nav-li-register');
+    var userEl  = document.getElementById('nav-li-user');
+    var nameEl  = document.getElementById('nav-username');
+    if (!guestEl) return;
+    var user = null;
+    try { user = JSON.parse(localStorage.getItem('forza_user')); } catch(e) {}
+    if (user && user.fname) {
+      guestEl.style.display = 'none';
+      if (regEl) regEl.style.display = 'none';
+      userEl.style.display = 'flex';
+      if (nameEl) nameEl.textContent = user.fname;
+    } else {
+      guestEl.style.display = 'flex';
+      if (regEl) regEl.style.display = 'flex';
+      userEl.style.display = 'none';
     }
-  } else {
-    const newId = products.length ? Math.max(...products.map(p => p.id)) + 1 : 1;
-    products.push({ id: newId, name, price, cat, img, desc });
   }
-
-  const saveBtn = document.getElementById('save-btn');
-  const origLabel = saveBtn.textContent;
-  saveBtn.textContent = 'Saving...';
-  saveBtn.disabled = true;
-
-  const result = await saveProducts(products);
-
-  saveBtn.textContent = origLabel;
-  saveBtn.disabled = false;
-
-  if (result && result.saved === 'local') {
-    showToast(`⚠ Could not reach the server (${result.message || 'network error'}) — not saved.`);
-    return;
-  }
-
-  showToast(isNew ? `✅ "${name}" added to catalog!` : `✅ "${name}" updated!`);
-  closeModal();
-  await syncProducts();
-  renderProductsTable();
-}
- 
-// ===== DELETE MODAL =====
-let _deleteId = null;
-function openDeleteModal(id) {
-  const products = getProducts();
-  const p = products.find(x => x.id === id);
-  _deleteId = id;
-  document.getElementById('delete-msg').textContent = `Are you sure you want to delete "${p ? p.name : 'this product'}"? This cannot be undone.`;
-  document.getElementById('delete-modal').classList.add('open');
-}
-function closeDeleteModal() {
-  document.getElementById('delete-modal').classList.remove('open');
-}
-async function confirmDelete() {
-  if (!_deleteId) return;
-  const products = getProducts().filter(p => p.id !== _deleteId);
-  const result = await saveProducts(products);
-  if (result && result.saved === 'local') {
-    showToast(`⚠ Could not reach the server (${result.message || 'network error'}) — not deleted.`);
-    closeDeleteModal();
-    return;
-  }
-  showToast('🗑 Product deleted');
-  closeDeleteModal();
-  await syncProducts();
-  renderProductsTable();
-}
- 
-// ===== IMAGE UPLOAD =====
-async function uploadProductImage(input) {
-  const file = input.files && input.files[0];
-  if (!file) return;
-  const status = document.getElementById('upload-status');
-  status.textContent = 'Uploading...';
-  try {
-    const fd = new FormData();
-    fd.append('image', file);
-    const res = await fetch('/api/upload-image?key=' + encodeURIComponent(ADMIN_KEY), {
-      method: 'POST',
-      body: fd
+  function initUserDropdown() {
+    var trigger  = document.getElementById('nav-user-trigger');
+    var dropdown = document.getElementById('nav-user-dropdown');
+    if (!trigger || !dropdown) return;
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var open = dropdown.classList.toggle('open');
+      trigger.classList.toggle('open', open);
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'Upload failed');
-    document.getElementById('f-img').value = data.img;
-    previewImg(data.img);
-    status.textContent = '✅ Uploaded';
-    showToast('✅ Photo uploaded');
-  } catch (e) {
-    status.textContent = '';
-    showToast(`⚠ Upload failed: ${e.message}`);
-  } finally {
-    input.value = '';
+    document.addEventListener('click', function() {
+      dropdown.classList.remove('open');
+      if (trigger) trigger.classList.remove('open');
+    });
+    dropdown.addEventListener('click', function(e) { e.stopPropagation(); });
   }
-}
-
-// ===== IMAGE PREVIEW =====
-function previewImg(src) {
-  const img  = document.getElementById('img-preview');
-  const ph   = document.getElementById('img-preview-placeholder');
-  if (src) {
-    img.src = src;
-    img.style.display = 'block';
-    ph.style.display  = 'none';
-    img.onerror = () => { img.style.display = 'none'; ph.style.display = 'block'; };
-  } else {
-    resetImgPreview();
-  }
-}
-function resetImgPreview() {
-  document.getElementById('img-preview').style.display = 'none';
-  document.getElementById('img-preview-placeholder').style.display = 'block';
-}
- 
-// ===== INIT =====
-syncProducts().then(renderOverview);
- 
-// Close modals on backdrop click
-document.getElementById('product-modal').addEventListener('click', e => {
-  if (e.target === document.getElementById('product-modal')) closeModal();
-});
-document.getElementById('delete-modal').addEventListener('click', e => {
-  if (e.target === document.getElementById('delete-modal')) closeDeleteModal();
-});
+  window.signOut = function() {
+    fetch('/api/logout', { method: 'POST', credentials: 'include' }).catch(function(){});
+    localStorage.removeItem('forza_user');
+    updateAuthNav();
+    var dd = document.getElementById('nav-user-dropdown');
+    if (dd) dd.classList.remove('open');
+    setTimeout(function() { location.href = 'home.html'; }, 300);
+  };
+  document.addEventListener('DOMContentLoaded', function() {
+    updateAuthNav();
+    initUserDropdown();
+  });
+})();
 </script>
 <script src="forza-i18n.js"></script>
 </body>
